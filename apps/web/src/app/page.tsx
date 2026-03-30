@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
 // ---------------------------------------------------------------------------
@@ -80,26 +80,7 @@ function useScrollReveal() {
 // ---------------------------------------------------------------------------
 // Spotlight Card Hook
 // ---------------------------------------------------------------------------
-function useSpotlight(ref: React.RefObject<HTMLElement | null>) {
-  const handleMouseMove = useCallback(
-    (e: MouseEvent) => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      ref.current.style.setProperty("--mouse-x", `${x}px`);
-      ref.current.style.setProperty("--mouse-y", `${y}px`);
-    },
-    [ref]
-  );
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    el.addEventListener("mousemove", handleMouseMove);
-    return () => el.removeEventListener("mousemove", handleMouseMove);
-  }, [ref, handleMouseMove]);
-}
+// useSpotlight removed (AI slop — mouse-following glow effect)
 
 // ---------------------------------------------------------------------------
 // Icons (inline SVG, no deps)
@@ -197,9 +178,9 @@ function IconTarget({ className = "h-5 w-5" }: { className?: string }) {
 }
 
 // ---------------------------------------------------------------------------
-// Spotlight Feature Card
+// Feature Card — flat, no effects
 // ---------------------------------------------------------------------------
-function SpotlightFeatureCard({
+function FeatureCard({
   icon,
   title,
   description,
@@ -212,17 +193,11 @@ function SpotlightFeatureCard({
   accentColor: string;
   className?: string;
 }) {
-  const cardRef = useRef<HTMLDivElement>(null);
-  useSpotlight(cardRef);
-
   return (
-    <div
-      ref={cardRef}
-      className={`glass-card spotlight-card card-lift rounded-sm p-8 ${className}`}
-    >
+    <div className={`card p-8 ${className}`}>
       <div
-        className="mb-5 flex h-11 w-11 items-center justify-center rounded-sm"
-        style={{ backgroundColor: `${accentColor}15` }}
+        className="mb-5 flex h-10 w-10 items-center justify-center"
+        style={{ color: accentColor }}
       >
         <span style={{ color: accentColor }}>{icon}</span>
       </div>
@@ -302,7 +277,7 @@ function FreeScanner() {
           <button
             type="submit"
             disabled={loading}
-            className="btn-shimmer shrink-0 rounded-sm bg-brand px-6 py-3.5 text-body-sm font-medium text-white transition-all hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
+            className=" shrink-0 rounded-sm bg-brand px-6 py-3.5 text-body-sm font-medium text-white transition-all hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
               <span className="flex items-center gap-2">
@@ -391,7 +366,7 @@ function ScanResultCard({ result }: { result: ScanResult }) {
       <div className="mt-6 text-center">
         <Link
           href="/auth/login"
-          className="btn-shimmer inline-block rounded-sm bg-brand px-5 py-2.5 text-body-sm font-medium text-white transition-colors hover:bg-brand-hover"
+          className=" inline-block rounded-sm bg-brand px-5 py-2.5 text-body-sm font-medium text-white transition-colors hover:bg-brand-hover"
         >
           Get Full Report
         </Link>
@@ -581,22 +556,17 @@ export default function Home() {
       {/* ================================================================= */}
       {/* HERO (nav is in layout.tsx) */}
       {/* ================================================================= */}
-      <section className="relative overflow-hidden hero-glow dot-grid">
+      <section className="relative overflow-hidden  ">
         {/* Noise texture overlay */}
-        <div className="noise pointer-events-none absolute inset-0" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 pt-36 pb-24 text-center lg:pt-44">
-          {/* Pill badge */}
-          <div className="reveal mb-8 inline-flex items-center gap-2.5 rounded-sm glass px-4 py-2">
-            <span className="inline-block h-1.5 w-1.5 rounded-sm bg-success animate-pulse" />
-            <span className="text-caption text-text-secondary">Now in public beta</span>
-            <IconArrowRight className="h-3 w-3 text-text-tertiary" />
-          </div>
+          {/* Simple beta label — no pill, no pulsing dot */}
+          <p className="reveal mb-8 section-label">Public beta</p>
 
           {/* Headline */}
           <h1 className="reveal text-display text-text-primary mx-auto max-w-4xl text-balance">
             Get cited by{" "}
-            <span className="text-gradient">AI answer engines</span>
+            <span className="text-brand">AI answer engines</span>
           </h1>
 
           {/* Subtext */}
@@ -614,17 +584,7 @@ export default function Home() {
             No sign-up required. Scan any public URL instantly.
           </p>
 
-          {/* Floating stats */}
-          <div className="reveal mt-20 stagger">
-            <div className="mx-auto grid max-w-3xl grid-cols-2 gap-4 md:grid-cols-4">
-              {stats.map((stat) => (
-                <div key={stat.label} className="glass-card rounded-sm px-5 py-4 text-center">
-                  <p className="text-h3 font-bold text-text-primary tabular-nums">{stat.value}</p>
-                  <p className="mt-1 text-tiny text-text-tertiary">{stat.label}</p>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* Stats removed — AI slop tell (hero metric row) */}
         </div>
       </section>
 
@@ -649,7 +609,7 @@ export default function Home() {
             {painPoints.map((point) => (
               <div
                 key={point.title}
-                className="glass-card card-lift group rounded-sm p-8"
+                className="glass-card  group rounded-sm p-8"
               >
                 <div
                   className="mb-5 flex h-11 w-11 items-center justify-center rounded-sm"
@@ -676,7 +636,7 @@ export default function Home() {
             <p className="section-label mb-4">Features</p>
             <h2 className="text-h2 text-text-primary">
               Built for{" "}
-              <span className="text-gradient-brand">AEO professionals</span>
+              <span className="text-brand">AEO professionals</span>
             </h2>
             <p className="mt-5 text-body-lg text-text-secondary">
               Every feature designed around real citation workflows.
@@ -686,7 +646,7 @@ export default function Home() {
           {/* Asymmetric bento: row 1 = 2 large, row 2 = 3 small */}
           <div className="reveal grid gap-4 md:grid-cols-2">
             {features.filter((f) => f.large).map((feat) => (
-              <SpotlightFeatureCard
+              <FeatureCard
                 key={feat.title}
                 icon={feat.icon}
                 title={feat.title}
@@ -698,7 +658,7 @@ export default function Home() {
           </div>
           <div className="reveal mt-4 grid gap-4 md:grid-cols-3">
             {features.filter((f) => !f.large).map((feat) => (
-              <SpotlightFeatureCard
+              <FeatureCard
                 key={feat.title}
                 icon={feat.icon}
                 title={feat.title}
@@ -729,14 +689,14 @@ export default function Home() {
               className="pointer-events-none absolute top-[44px] left-[16.67%] right-[16.67%] hidden h-px md:block"
               style={{
                 background:
-                  "linear-gradient(90deg, transparent 0%, var(--color-brand) 30%, var(--color-accent) 70%, transparent 100%)",
+                  "var(--color-border)",
               }}
             />
 
             {steps.map((s) => (
               <div key={s.step} className="relative text-center">
-                {/* Step number with glow border */}
-                <div className="glow-border mx-auto mb-8 flex h-[72px] w-[72px] items-center justify-center rounded-sm">
+                {/* Step number with card */}
+                <div className=" mx-auto mb-8 flex h-[72px] w-[72px] items-center justify-center rounded-sm">
                   <span className="text-h2 font-bold text-text-primary relative z-10">
                     {s.step}
                   </span>
@@ -772,7 +732,7 @@ export default function Home() {
                 key={plan.name}
                 className={`relative rounded-sm p-8 transition-all ${
                   plan.highlighted
-                    ? "glow-border"
+                    ? ""
                     : "glass-card"
                 }`}
               >
@@ -795,7 +755,7 @@ export default function Home() {
                     href="/auth/login"
                     className={`mt-8 block w-full rounded-sm py-3.5 text-center text-body-sm font-medium transition-all ${
                       plan.highlighted
-                        ? "btn-shimmer bg-brand text-white hover:bg-brand-hover"
+                        ? " bg-brand text-white hover:bg-brand-hover"
                         : "border border-border text-text-primary hover:bg-bg-tertiary hover:border-border-hover"
                     }`}
                   >
@@ -822,11 +782,11 @@ export default function Home() {
       {/* ================================================================= */}
       <section className="py-32">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="reveal relative overflow-hidden rounded-3xl border border-border p-16 text-center mesh-gradient noise">
+          <div className="reveal border-t border-b border-border py-20 text-center">
             <div className="relative z-10">
               <h2 className="text-h1 font-bold text-text-primary">
                 Stop guessing.{" "}
-                <span className="text-gradient">Start getting cited.</span>
+                <span className="text-brand">Start getting cited.</span>
               </h2>
               <p className="mt-5 text-body-lg text-text-secondary mx-auto max-w-xl">
                 Join the beta and discover exactly where your content stands in the
@@ -834,7 +794,7 @@ export default function Home() {
               </p>
               <Link
                 href="/auth/login"
-                className="btn-shimmer mt-10 inline-flex items-center gap-2 rounded-sm bg-brand px-8 py-4 text-body font-medium text-white shadow-glow transition-all hover:bg-brand-hover"
+                className=" mt-10 inline-flex items-center gap-2 rounded-sm bg-brand px-8 py-4 text-body font-medium text-white  transition-all hover:bg-brand-hover"
               >
                 Start Your 14-Day Free Trial
                 <IconArrowRight className="h-4 w-4" />
