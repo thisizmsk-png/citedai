@@ -404,14 +404,14 @@ const painPoints = [
     title: "Invisible to AI",
     description:
       "ChatGPT, Perplexity, and Google AI Overviews cite your competitors, not you. Your content exists but AI cannot extract answers from it.",
-    color: "#3186FF",
+    color: "#0a0a0c",
   },
   {
     icon: <IconChart className="h-5 w-5" />,
     title: "Losing Organic Traffic",
     description:
       "AI answer engines serve zero-click results. Users never reach your site. Your SEO playbook was built for a world that no longer exists.",
-    color: "#06b6d4",
+    color: "#0a0a0c",
   },
   {
     icon: <IconShield className="h-5 w-5" />,
@@ -449,7 +449,7 @@ const features = [
     title: "AEO Score Engine",
     description:
       "40+ ranking factors across extractability, authority, and freshness. Deterministic, transparent scoring you can act on today.",
-    accent: "#3186FF",
+    accent: "#0a0a0c",
     large: true,
   },
   {
@@ -457,7 +457,7 @@ const features = [
     title: "Code-Level Fixes",
     description:
       "Every issue includes a copy-paste fix. Schema markup, structured data, and content restructuring.",
-    accent: "#06b6d4",
+    accent: "#0a0a0c",
     large: false,
   },
   {
@@ -465,7 +465,7 @@ const features = [
     title: "Real-Time Monitoring",
     description:
       "Daily rescans with trend tracking. Know instantly when your score changes.",
-    accent: "#f59e0b",
+    accent: "#0a0a0c",
     large: false,
   },
   {
@@ -473,7 +473,7 @@ const features = [
     title: "Competitor Intelligence",
     description:
       "See how your AEO score compares to competitors. Find gaps they exploit that you don't.",
-    accent: "#22c55e",
+    accent: "#0a0a0c",
     large: true,
   },
   {
@@ -481,7 +481,7 @@ const features = [
     title: "Citation Tracking",
     description:
       "Monitor when ChatGPT, Perplexity, or Google AI Overviews cite your content. Know exactly which queries surface your pages.",
-    accent: "#ef4444",
+    accent: "#0a0a0c",
     large: false,
   },
 ];
@@ -566,7 +566,7 @@ export default function Home() {
           {/* Headline */}
           <h1 className="reveal text-display text-text-primary mx-auto max-w-4xl text-balance">
             Get cited by{" "}
-            <span className="text-brand">AI answer engines</span>
+            <span className="text-accent">AI answer engines</span>
           </h1>
 
           {/* Subtext */}
@@ -628,7 +628,18 @@ export default function Home() {
       </section>
 
       {/* ================================================================= */}
-      {/* FEATURES — Asymmetric bento grid with spotlight cards */}
+      {/* SOCIAL PROOF — simple counter */}
+      {/* ================================================================= */}
+      <section className="py-10 border-t border-border">
+        <div className="mx-auto max-w-7xl px-6 text-center">
+          <p className="text-body-sm text-text-tertiary">
+            <span className="font-medium text-text-secondary tabular-nums">2,400+</span> pages scanned during beta
+          </p>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* FEATURES — Asymmetric bento grid */}
       {/* ================================================================= */}
       <section id="features" className="py-32 border-t border-border relative">
         <div className="mx-auto max-w-7xl px-6">
@@ -636,7 +647,7 @@ export default function Home() {
             <p className="section-label mb-4">Features</p>
             <h2 className="text-h2 text-text-primary">
               Built for{" "}
-              <span className="text-brand">AEO professionals</span>
+              <span className="text-accent">AEO professionals</span>
             </h2>
             <p className="mt-5 text-body-lg text-text-secondary">
               Every feature designed around real citation workflows.
@@ -696,7 +707,7 @@ export default function Home() {
             {steps.map((s) => (
               <div key={s.step} className="relative text-center">
                 {/* Step number with card */}
-                <div className=" mx-auto mb-8 flex h-[72px] w-[72px] items-center justify-center rounded-sm">
+                <div className="mx-auto mb-8 flex h-[72px] w-[72px] items-center justify-center border border-border">
                   <span className="text-h2 font-bold text-text-primary relative z-10">
                     {s.step}
                   </span>
@@ -786,7 +797,7 @@ export default function Home() {
             <div className="relative z-10">
               <h2 className="text-h1 font-bold text-text-primary">
                 Stop guessing.{" "}
-                <span className="text-brand">Start getting cited.</span>
+                <span className="text-accent">Start getting cited.</span>
               </h2>
               <p className="mt-5 text-body-lg text-text-secondary mx-auto max-w-xl">
                 Join the beta and discover exactly where your content stands in the

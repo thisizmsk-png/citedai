@@ -44,7 +44,7 @@ function Header() {
 
         {/* Center links (3-5 max) */}
         <nav className="hidden items-center gap-8 md:flex">
-          <Link href="/" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">
+          <Link href="/#features" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">
             Features
           </Link>
           <Link href="/#pricing" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">
@@ -65,7 +65,7 @@ function Header() {
           </Link>
           <Link
             href="/auth/login"
-            className="rounded-lg bg-brand px-4 py-2 text-body-sm font-medium text-white transition-colors hover:bg-brand-hover"
+            className="bg-brand px-4 py-2 text-body-sm font-medium text-text-inverse transition-colors hover:bg-brand-hover"
           >
             Get Started
           </Link>
@@ -111,9 +111,9 @@ function Footer() {
           <div>
             <h4 className="text-tiny font-medium uppercase tracking-wide text-text-tertiary">Resources</h4>
             <ul className="mt-4 space-y-3">
-              <li><Link href="/" className="text-body-sm text-text-secondary hover:text-text-primary transition-colors">Documentation</Link></li>
-              <li><Link href="/" className="text-body-sm text-text-secondary hover:text-text-primary transition-colors">Blog</Link></li>
-              <li><Link href="/" className="text-body-sm text-text-secondary hover:text-text-primary transition-colors">Changelog</Link></li>
+              <li><span className="text-body-sm text-text-disabled cursor-default">Documentation</span></li>
+              <li><span className="text-body-sm text-text-disabled cursor-default">Blog</span></li>
+              <li><Link href="https://github.com/thisizmsk-png/citedai" className="text-body-sm text-text-secondary hover:text-text-primary transition-colors">GitHub</Link></li>
             </ul>
           </div>
 
@@ -121,9 +121,9 @@ function Footer() {
           <div>
             <h4 className="text-tiny font-medium uppercase tracking-wide text-text-tertiary">Company</h4>
             <ul className="mt-4 space-y-3">
-              <li><Link href="/" className="text-body-sm text-text-secondary hover:text-text-primary transition-colors">About</Link></li>
-              <li><Link href="/" className="text-body-sm text-text-secondary hover:text-text-primary transition-colors">Privacy</Link></li>
-              <li><Link href="/" className="text-body-sm text-text-secondary hover:text-text-primary transition-colors">Terms</Link></li>
+              <li><Link href="mailto:msaikrishna399@gmail.com" className="text-body-sm text-text-secondary hover:text-text-primary transition-colors">Contact</Link></li>
+              <li><span className="text-body-sm text-text-disabled cursor-default">Privacy</span></li>
+              <li><span className="text-body-sm text-text-disabled cursor-default">Terms</span></li>
             </ul>
           </div>
         </div>
@@ -153,6 +153,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
+      </head>
       <body className="min-h-screen bg-bg-primary text-text-primary antialiased font-sans">
         <Header />
         <div className="pt-16">{/* offset for fixed header */}
