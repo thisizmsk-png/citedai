@@ -48,6 +48,9 @@ function Header() {
           <Link href="/dashboard" className="py-2 text-body-sm text-text-secondary transition-colors hover:text-text-primary">
             Dashboard
           </Link>
+          <Link href="/dashboard/tools" className="py-2 text-body-sm text-text-secondary transition-colors hover:text-text-primary">
+            Tools
+          </Link>
         </nav>
 
         {/* Right CTA cluster (desktop) */}

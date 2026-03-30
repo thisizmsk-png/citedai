@@ -1,6 +1,8 @@
 import type { CrawlJobData, CrawlJobProgress } from "@citedai/shared";
 import { CRAWL_SETTINGS } from "@citedai/shared";
 import { scorePageContent, detectIssues, type PageContent } from "@citedai/scoring";
+import { db, scans, pages, issues as issuesTable, sites } from "@citedai/db";
+import { eq } from "drizzle-orm";
 import * as cheerio from "cheerio";
 
 type ProgressCallback = (progress: CrawlJobProgress) => Promise<void>;
@@ -28,39 +30,80 @@ export async function processCrawlJob(
   // Step 0: Check for /llms.txt
   const hasLlmsTxt = await checkLlmsTxt(domain);
 
+  // Mark scan as crawling
+  await db.update(scans).set({ status: "crawling" }).where(eq(scans.id, scanId));
+
   // Step 1: Discover pages
   const pageUrls = await discoverPages(domain, maxPages);
 
+  // Update total pages count
+  await db.update(scans).set({ pagesTotal: pageUrls.length }).where(eq(scans.id, scanId));
   await onProgress({ pagesCrawled: 0, pagesTotal: pageUrls.length });
+
+  // Accumulators for final averages
+  let totalOverall = 0;
+  let totalExtractability = 0;
+  let totalAuthority = 0;
+  let totalFreshness = 0;
+  let pagesScored = 0;
 
   // Step 2: Crawl and score each page
   for (let i = 0; i < pageUrls.length; i++) {
     const url = pageUrls[i];
 
     try {
-      // 2a. Fetch page
       const html = await fetchPage(url);
-
-      // 2b. Parse into PageContent
       const content = parsePageContent(url, html);
       content.hasLlmsTxt = hasLlmsTxt;
 
-      // 2c. Score
       const score = scorePageContent(content);
+      const detectedIssues = detectIssues(content);
 
-      // 2d. Detect issues
-      const issues = detectIssues(content);
+      // 2e. Persist page to DB
+      const [insertedPage] = await db.insert(pages).values({
+        scanId,
+        siteId,
+        url,
+        title: content.title,
+        wordCount: content.wordCount,
+        scoreOverall: score.overall,
+        scoreExtractability: score.extractability,
+        scoreAuthority: score.authority,
+        scoreFreshness: score.freshness,
+        scoreBreakdown: score.breakdown as Record<string, unknown>,
+        hasSchemaMarkup: content.schemaMarkup.length > 0,
+        hasLlmsTxt,
+        schemaTypes: content.schemaMarkup.map((s: any) => s["@type"]).filter(Boolean) as string[],
+      }).returning({ id: pages.id });
 
-      // 2e. Persist (TODO: batch insert via @citedai/db)
-      // await db.insert(pages).values({ ... })
-      // await db.insert(issuesTable).values(issues.map(...))
+      // Persist issues
+      if (detectedIssues.length > 0 && insertedPage) {
+        await db.insert(issuesTable).values(
+          detectedIssues.map((issue) => ({
+            pageId: insertedPage.id,
+            scanId,
+            siteId,
+            category: issue.category as "extractability" | "authority" | "freshness",
+            severity: issue.severity as "critical" | "warning" | "info",
+            issueType: issue.issueType,
+            description: issue.description,
+            recommendation: issue.recommendation,
+            suggestedFix: issue.suggestedFix ?? null,
+            estimatedImpact: issue.estimatedImpact,
+          })),
+        );
+      }
 
-      console.log(
-        `[crawl] Scored ${url} — overall=${score.overall}, issues=${issues.length}`,
-      );
+      // Accumulate scores
+      totalOverall += score.overall;
+      totalExtractability += score.extractability;
+      totalAuthority += score.authority;
+      totalFreshness += score.freshness;
+      pagesScored++;
+
+      console.log(`[crawl] Scored ${url} — overall=${score.overall}, issues=${detectedIssues.length}`);
     } catch (err) {
       console.warn(`[crawl] Failed to process ${url}:`, err);
-      // Continue to next page — don't fail the entire scan
     }
 
     await onProgress({
@@ -70,9 +113,26 @@ export async function processCrawlJob(
     });
   }
 
-  // Step 3: Update scan with aggregated scores
-  // TODO: Calculate averages and update scan record
-  console.log(`[crawl] Scan ${scanId} complete. ${pageUrls.length} pages processed.`);
+  // Step 3: Calculate averages and update scan record
+  const avgOverall = pagesScored > 0 ? Math.round(totalOverall / pagesScored) : 0;
+  const avgExtractability = pagesScored > 0 ? Math.round(totalExtractability / pagesScored) : 0;
+  const avgAuthority = pagesScored > 0 ? Math.round(totalAuthority / pagesScored) : 0;
+  const avgFreshness = pagesScored > 0 ? Math.round(totalFreshness / pagesScored) : 0;
+
+  await db.update(scans).set({
+    status: "completed",
+    scoreOverall: avgOverall,
+    scoreExtractability: avgExtractability,
+    scoreAuthority: avgAuthority,
+    scoreFreshness: avgFreshness,
+    pagesScanned: pagesScored,
+    completedAt: new Date(),
+  }).where(eq(scans.id, scanId));
+
+  // Update site's last scanned timestamp
+  await db.update(sites).set({ lastScannedAt: new Date() }).where(eq(sites.id, siteId));
+
+  console.log(`[crawl] Scan ${scanId} complete. ${pagesScored}/${pageUrls.length} pages scored. Avg score: ${avgOverall}`);
 }
 
 // ---------------------------------------------------------------------------
