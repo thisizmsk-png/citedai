@@ -87,7 +87,7 @@ function useScrollReveal() {
 // ---------------------------------------------------------------------------
 function IconSearch({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
     </svg>
   );
@@ -95,7 +95,7 @@ function IconSearch({ className = "h-5 w-5" }: { className?: string }) {
 
 function IconCheck({ className = "h-4 w-4" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
     </svg>
   );
@@ -112,7 +112,7 @@ function IconSpinner({ className = "h-4 w-4" }: { className?: string }) {
 
 function IconEye({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
     </svg>
@@ -121,7 +121,7 @@ function IconEye({ className = "h-5 w-5" }: { className?: string }) {
 
 function IconShield({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
     </svg>
   );
@@ -129,7 +129,7 @@ function IconShield({ className = "h-5 w-5" }: { className?: string }) {
 
 function IconBolt({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
     </svg>
   );
@@ -137,7 +137,7 @@ function IconBolt({ className = "h-5 w-5" }: { className?: string }) {
 
 function IconChart({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
     </svg>
   );
@@ -145,7 +145,7 @@ function IconChart({ className = "h-5 w-5" }: { className?: string }) {
 
 function IconCode({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
     </svg>
   );
@@ -153,7 +153,7 @@ function IconCode({ className = "h-5 w-5" }: { className?: string }) {
 
 function IconUsers({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
     </svg>
   );
@@ -161,7 +161,7 @@ function IconUsers({ className = "h-5 w-5" }: { className?: string }) {
 
 function IconArrowRight({ className = "h-4 w-4" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
     </svg>
   );
@@ -169,7 +169,7 @@ function IconArrowRight({ className = "h-4 w-4" }: { className?: string }) {
 
 function IconTarget({ className = "h-5 w-5" }: { className?: string }) {
   return (
-    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" aria-hidden="true">
       <circle cx="12" cy="12" r="10" />
       <circle cx="12" cy="12" r="6" />
       <circle cx="12" cy="12" r="2" />
@@ -269,14 +269,14 @@ function FreeScanner() {
               type="url"
               value={url}
               onChange={(e) => setUrl(e.target.value)}
-              placeholder="https://example.com/your-page"
+              placeholder="https://example.com/your-page" aria-label="Enter a URL to scan"
               required
               className="w-full bg-transparent py-3 text-body text-text-primary placeholder-text-tertiary outline-none"
             />
           </div>
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading} aria-busy={loading}
             className=" shrink-0 rounded-sm bg-brand px-6 py-3.5 text-body-sm font-medium text-white transition-all hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? (
@@ -403,21 +403,21 @@ const painPoints = [
     icon: <IconEye className="h-5 w-5" />,
     title: "Invisible to AI",
     description:
-      "ChatGPT, Perplexity, and Google AI Overviews cite your competitors, not you. Your content exists but AI cannot extract answers from it.",
+    " ChatGPT, Perplexity, and Google AI Overviews cite your competitors, not you. Your content exists but AI cannot extract answers from it.",
     color: "#0a0a0c",
   },
   {
     icon: <IconChart className="h-5 w-5" />,
     title: "Losing Organic Traffic",
     description:
-      "AI answer engines serve zero-click results. Users never reach your site. Your SEO playbook was built for a world that no longer exists.",
+    " AI answer engines serve zero-click results. Users never reach your site. Your SEO playbook was built for a world that no longer exists.",
     color: "#0a0a0c",
   },
   {
     icon: <IconShield className="h-5 w-5" />,
     title: "No Visibility Into AI Search",
     description:
-      "Google Analytics cannot tell you when AI cites your page. You have no idea where you stand in the answer-engine landscape.",
+    " Google Analytics cannot tell you when AI cites your page. You have no idea where you stand in the answer-engine landscape.",
     color: "#22c55e",
   },
 ];
@@ -427,19 +427,19 @@ const steps = [
     step: "1",
     title: "Scan",
     description:
-      "Paste any URL. Our engine analyzes extractability, authority signals, and freshness against 40+ AEO factors in under 10 seconds.",
+    " Paste any URL. Our engine analyzes extractability, authority signals, and freshness against 40+ AEO factors in under 10 seconds.",
   },
   {
     step: "2",
     title: "Fix",
     description:
-      "Get an actionable issue list ranked by impact. Each recommendation includes a suggested code or copy fix you can apply immediately.",
+    " Get an actionable issue list ranked by impact. Each recommendation includes a suggested code or copy fix you can apply immediately.",
   },
   {
     step: "3",
     title: "Monitor",
     description:
-      "Track your AEO score over time. Get alerts when AI engines start or stop citing your pages. See which queries trigger citations.",
+    " Track your AEO score over time. Get alerts when AI engines start or stop citing your pages. See which queries trigger citations.",
   },
 ];
 
@@ -448,7 +448,7 @@ const features = [
     icon: <IconSearch className="h-5 w-5" />,
     title: "AEO Score Engine",
     description:
-      "40+ ranking factors across extractability, authority, and freshness. Deterministic, transparent scoring you can act on today.",
+    " 40+ ranking factors across extractability, authority, and freshness. Deterministic, transparent scoring you can act on today.",
     accent: "#0a0a0c",
     large: true,
   },
@@ -456,7 +456,7 @@ const features = [
     icon: <IconCode className="h-5 w-5" />,
     title: "Code-Level Fixes",
     description:
-      "Every issue includes a copy-paste fix. Schema markup, structured data, and content restructuring.",
+    " Every issue includes a copy-paste fix. Schema markup, structured data, and content restructuring.",
     accent: "#0a0a0c",
     large: false,
   },
@@ -464,7 +464,7 @@ const features = [
     icon: <IconBolt className="h-5 w-5" />,
     title: "Real-Time Monitoring",
     description:
-      "Daily rescans with trend tracking. Know instantly when your score changes.",
+    " Daily rescans with trend tracking. Know instantly when your score changes.",
     accent: "#0a0a0c",
     large: false,
   },
@@ -472,7 +472,7 @@ const features = [
     icon: <IconUsers className="h-5 w-5" />,
     title: "Competitor Intelligence",
     description:
-      "See how your AEO score compares to competitors. Find gaps they exploit that you don't.",
+    " See how your AEO score compares to competitors. Find gaps they exploit that you don't.",
     accent: "#0a0a0c",
     large: true,
   },
@@ -480,7 +480,7 @@ const features = [
     icon: <IconChart className="h-5 w-5" />,
     title: "Citation Tracking",
     description:
-      "Monitor when ChatGPT, Perplexity, or Google AI Overviews cite your content. Know exactly which queries surface your pages.",
+    " Monitor when ChatGPT, Perplexity, or Google AI Overviews cite your content. Know exactly which queries surface your pages.",
     accent: "#0a0a0c",
     large: false,
   },
@@ -492,12 +492,12 @@ const plans = [
     price: 49,
     description: "For solo creators and small blogs.",
     features: [
-      "3 sites monitored",
-      "100 pages per scan",
-      "Weekly rescans",
-      "50 monitored queries",
-      "Email reports",
-      "Issue recommendations",
+    " 3 sites monitored",
+    " 100 pages per scan",
+    " Weekly rescans",
+    " 50 monitored queries",
+    " Email reports",
+    " Issue recommendations",
     ],
     cta: "Start Free Trial",
     highlighted: false,
@@ -507,14 +507,14 @@ const plans = [
     price: 149,
     description: "For content teams and growing brands.",
     features: [
-      "10 sites monitored",
-      "500 pages per scan",
-      "Daily rescans",
-      "250 monitored queries",
-      "API access",
-      "PDF export",
-      "Slack integration",
-      "Priority support",
+    " 10 sites monitored",
+    " 500 pages per scan",
+    " Daily rescans",
+    " 250 monitored queries",
+    " API access",
+    " PDF export",
+    " Slack integration",
+    " Priority support",
     ],
     cta: "Start Free Trial",
     highlighted: true,
@@ -524,25 +524,18 @@ const plans = [
     price: 499,
     description: "For agencies managing client portfolios.",
     features: [
-      "Unlimited sites",
-      "2,000 pages per scan",
-      "Daily rescans",
-      "1,000 monitored queries",
-      "Full API access",
-      "White-label reports",
-      "Client dashboards",
-      "Dedicated support",
+    " Unlimited sites",
+    " 2,000 pages per scan",
+    " Daily rescans",
+    " 1,000 monitored queries",
+    " Full API access",
+    " White-label reports",
+    " Client dashboards",
+    " Dedicated support",
     ],
     cta: "Contact Sales",
     highlighted: false,
   },
-];
-
-const stats = [
-  { value: "40+", label: "AEO factors analyzed" },
-  { value: "3", label: "AI engines tracked" },
-  { value: "<10s", label: "Scan time per page" },
-  { value: "500", label: "Pages per scan" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -552,11 +545,11 @@ export default function Home() {
   useScrollReveal();
 
   return (
-    <main className="relative">
+    <main id="main-content" className="relative">
       {/* ================================================================= */}
       {/* HERO (nav is in layout.tsx) */}
       {/* ================================================================= */}
-      <section className="relative overflow-hidden  ">
+      <section className="relative overflow-hidden" >
         {/* Noise texture overlay */}
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 pt-36 pb-24 text-center lg:pt-44">
@@ -700,7 +693,7 @@ export default function Home() {
               className="pointer-events-none absolute top-[44px] left-[16.67%] right-[16.67%] hidden h-px md:block"
               style={{
                 background:
-                  "var(--color-border)",
+                " var(--color-border)",
               }}
             />
 

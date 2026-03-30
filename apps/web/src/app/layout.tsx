@@ -14,15 +14,9 @@ export const metadata: Metadata = {
 function Logo() {
   return (
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="28" height="28" rx="8" fill="url(#logo-gradient)" />
+      <rect width="28" height="28" rx="8" fill="#0a0a0c" />
       <path d="M8 14.5C8 10.9 10.9 8 14.5 8c2.2 0 4.1 1.1 5.3 2.7" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" />
       <circle cx="14.5" cy="14.5" r="3" fill="#fff" />
-      <defs>
-        <linearGradient id="logo-gradient" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#0a0a0c" />
-          <stop offset="1" stopColor="#2a2a2e" />
-        </linearGradient>
-      </defs>
     </svg>
   );
 }
@@ -133,9 +127,7 @@ function Footer() {
             &copy; {new Date().getFullYear()} CitedAI. All rights reserved.
           </p>
           <div className="flex items-center gap-6">
-            <Link href="/" className="text-caption text-text-tertiary hover:text-text-secondary transition-colors">Twitter</Link>
-            <Link href="/" className="text-caption text-text-tertiary hover:text-text-secondary transition-colors">GitHub</Link>
-            <Link href="/" className="text-caption text-text-tertiary hover:text-text-secondary transition-colors">Discord</Link>
+            <Link href="https://github.com/thisizmsk-png/citedai" className="text-caption text-text-tertiary hover:text-text-secondary transition-colors">GitHub</Link>
           </div>
         </div>
       </div>
@@ -154,9 +146,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        <link rel="preconnect" href="https://api.fontshare.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://cdn.fontshare.com" crossOrigin="anonymous" />
         <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&display=swap" rel="stylesheet" />
       </head>
       <body className="min-h-screen bg-bg-primary text-text-primary antialiased font-sans">
+        {/* Skip nav — WCAG 2.4.1 [P1-1] */}
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 focus:z-[100] focus:bg-brand focus:text-text-inverse focus:px-4 focus:py-2">
+          Skip to content
+        </a>
         <Header />
         <div className="pt-16">{/* offset for fixed header */}
           {children}
