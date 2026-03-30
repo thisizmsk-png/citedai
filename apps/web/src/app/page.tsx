@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 
 // ---------------------------------------------------------------------------
@@ -224,6 +224,12 @@ function FreeScanner() {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ScanResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const abortRef = useRef<AbortController | null>(null);
+
+  // Cleanup abort on unmount
+  useEffect(() => {
+    return () => { abortRef.current?.abort(); };
+  }, []);
 
   async function handleScan(e: React.FormEvent) {
     e.preventDefault();
@@ -234,7 +240,10 @@ function FreeScanner() {
     setError(null);
     setResult(null);
 
-    const controller = new AbortController(); // H1: abort on unmount
+    abortRef.current?.abort(); // Cancel any in-flight request
+    const controller = new AbortController();
+    abortRef.current = controller;
+
     try {
       const res = await fetch("/api/v1/analyze", {
         method: "POST",
@@ -433,7 +442,7 @@ const painPoints = [
     title: "No Visibility Into AI Search",
     description:
     " Google Analytics cannot tell you when AI cites your page. You have no idea where you stand in the answer-engine landscape.",
-    color: "#22c55e",
+    color: "#0a0a0c",
   },
 ];
 
@@ -692,7 +701,7 @@ export default function Home() {
       {/* ================================================================= */}
       {/* HOW IT WORKS — connected steps with gradient line */}
       {/* ================================================================= */}
-      <section id="how-it-works" className="py-24 bg-bg-secondary border-y border-border relative noise">
+      <section id="how-it-works" className="py-24 bg-bg-secondary border-y border-border relative">
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <div className="reveal mx-auto max-w-2xl text-center mb-20">
             <p className="section-label mb-4">How It Works</p>
@@ -751,7 +760,7 @@ export default function Home() {
                 key={plan.name}
                 className={`relative rounded-sm p-8 transition-all ${
                   plan.highlighted
-                    ? ""
+                    ? "border-2 border-text-primary bg-bg-primary shadow-lg"
                     : "glass-card"
                 }`}
               >

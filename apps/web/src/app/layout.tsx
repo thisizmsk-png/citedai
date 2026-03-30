@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { MobileNav } from "./mobile-nav";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 function Logo() {
   return (
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="28" height="28" rx="8" fill="#0a0a0c" />
+      <rect width="28" height="28" rx="0" fill="#0a0a0c" />
       <path d="M8 14.5C8 10.9 10.9 8 14.5 8c2.2 0 4.1 1.1 5.3 2.7" stroke="#fff" strokeWidth="2.2" strokeLinecap="round" />
       <circle cx="14.5" cy="14.5" r="3" fill="#fff" />
     </svg>
@@ -49,8 +50,8 @@ function Header() {
           </Link>
         </nav>
 
-        {/* Right CTA cluster */}
-        <div className="flex items-center gap-3">
+        {/* Right CTA cluster (desktop) */}
+        <div className="hidden items-center gap-3 md:flex">
           <Link
             href="/auth/login"
             className="text-body-sm text-text-secondary transition-colors hover:text-text-primary"
@@ -64,6 +65,9 @@ function Header() {
             Get Started
           </Link>
         </div>
+
+        {/* Mobile hamburger */}
+        <MobileNav />
       </div>
     </header>
   );
