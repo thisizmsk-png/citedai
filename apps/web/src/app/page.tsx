@@ -83,8 +83,21 @@ function FreeScanner() {
         throw new Error(body?.error?.message || `Analysis failed (${res.status})`);
       }
 
-      const data = await res.json();
-      setResult(data.data ?? data);
+      const json = await res.json();
+      const d = json.data ?? json;
+      // API returns flat fields; component expects nested score object
+      setResult({
+        url: d.url,
+        title: d.title,
+        score: {
+          overall: d.score,
+          extractability: d.extractability,
+          authority: d.authority,
+          freshness: d.freshness,
+          breakdown: d.breakdown ?? {},
+        },
+        issues: d.issues ?? [],
+      });
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
