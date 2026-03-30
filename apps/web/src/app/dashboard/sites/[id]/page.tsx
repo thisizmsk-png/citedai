@@ -275,16 +275,8 @@ export default function SiteDetailPage() {
           createdAt: siteData.createdAt || new Date().toISOString(),
         });
       } else {
-        // Site not found in API — show a placeholder for the stub API
-        setSite({
-          id: siteId,
-          domain: `site-${siteId.slice(0, 6)}.com`,
-          verified: false,
-          verificationMethod: "dns",
-          verificationToken: "",
-          aeoScore: null,
-          createdAt: new Date().toISOString(),
-        });
+        // Site not found — show error, not a fake placeholder
+        setError("Site not found. It may have been deleted or you don't have access.");
       }
 
       // Scans would come from a separate endpoint in production

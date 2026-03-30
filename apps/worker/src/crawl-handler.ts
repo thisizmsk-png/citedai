@@ -174,11 +174,11 @@ export async function discoverPages(domain: string, maxPages: number): Promise<s
   const discovered = new Set<string>();
 
   // Phase 1: Sitemap
-  await discoverFromSitemap(`https://${domain}/sitemap.xml`, discovered, maxPages);
+  await discoverFromSitemap(`https://${domain}/sitemap.xml`, discovered, maxPages, domain);
 
   // Also try sitemap_index.xml if the main sitemap didn't yield much
   if (discovered.size < maxPages) {
-    await discoverFromSitemap(`https://${domain}/sitemap_index.xml`, discovered, maxPages);
+    await discoverFromSitemap(`https://${domain}/sitemap_index.xml`, discovered, maxPages, domain);
   }
 
   // Phase 2: If sitemap yielded <5 URLs, crawl homepage for internal links
@@ -196,11 +196,21 @@ export async function discoverPages(domain: string, maxPages: number): Promise<s
  * Parse a sitemap or sitemap index XML and collect URLs.
  * For sitemap indexes, recursively fetches child sitemaps.
  */
+const MAX_SITEMAP_DEPTH = 3; // Prevent recursive sitemap bomb
+
 async function discoverFromSitemap(
   sitemapUrl: string,
   discovered: Set<string>,
   maxPages: number,
+  targetDomain: string,
+  depth: number = 0,
+  visited: Set<string> = new Set(),
 ): Promise<void> {
+  // Guard against recursion bomb + cycles
+  if (depth > MAX_SITEMAP_DEPTH) return;
+  if (visited.has(sitemapUrl)) return;
+  visited.add(sitemapUrl);
+
   try {
     const response = await fetch(sitemapUrl, {
       headers: { "User-Agent": CRAWL_SETTINGS.USER_AGENT },
@@ -211,25 +221,32 @@ async function discoverFromSitemap(
     const xml = await response.text();
     const $ = cheerio.load(xml, { xmlMode: true });
 
-    // Check if this is a sitemap index (contains <sitemap> elements)
+    // Check if this is a sitemap index
     const childSitemaps = $("sitemap > loc");
     if (childSitemaps.length > 0) {
-      // It's a sitemap index — fetch each child sitemap
       for (let i = 0; i < childSitemaps.length && discovered.size < maxPages; i++) {
         const childUrl = $(childSitemaps[i]).text().trim();
         if (childUrl) {
-          await discoverFromSitemap(childUrl, discovered, maxPages);
+          await discoverFromSitemap(childUrl, discovered, maxPages, targetDomain, depth + 1, visited);
         }
       }
       return;
     }
 
-    // Regular sitemap — extract <loc> URLs
+    // Regular sitemap — extract <loc> URLs, validate same domain
     $("url > loc").each((_, el) => {
       if (discovered.size >= maxPages) return false;
       const loc = $(el).text().trim();
       if (loc) {
-        discovered.add(loc);
+        try {
+          const locUrl = new URL(loc);
+          // Only accept URLs for the target domain (prevents SSRF via sitemap)
+          if (locUrl.hostname === targetDomain) {
+            discovered.add(loc);
+          }
+        } catch {
+          // skip malformed
+        }
       }
     });
   } catch (err) {

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { db, sites, users } from "@citedai/db";
 import { eq, and } from "drizzle-orm";
 import { PLAN_LIMITS } from "@citedai/shared";
+import { validateExternalUrl } from "@/lib/ssrf-guard";
 import type { Plan } from "@citedai/shared";
 import { randomUUID } from "node:crypto";
 
@@ -98,6 +99,15 @@ export async function POST(request: NextRequest) {
     if (!domain || domain.length < 3 || !domain.includes(".")) {
       return NextResponse.json(
         { error: { code: "INVALID_DOMAIN", message: "Domain must be a valid hostname (e.g. example.com)" } },
+        { status: 400 },
+      );
+    }
+
+    // SSRF protection — block private/internal domains at registration time
+    const isExternal = await validateExternalUrl(new URL(`https://${domain}`));
+    if (!isExternal) {
+      return NextResponse.json(
+        { error: { code: "BLOCKED_DOMAIN", message: "Cannot register internal or private network domains" } },
         { status: 400 },
       );
     }
