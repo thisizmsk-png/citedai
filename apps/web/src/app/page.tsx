@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 
 // ---------------------------------------------------------------------------
-// Types for the free scanner result (matches API shape)
+// Types
 // ---------------------------------------------------------------------------
 interface ScoreBreakdown {
   score: number;
@@ -36,22 +36,99 @@ interface ScanResult {
 // ---------------------------------------------------------------------------
 function scoreColor(score: number, max: number): string {
   const pct = (score / max) * 100;
-  if (pct >= 70) return "text-emerald-400";
-  if (pct >= 40) return "text-amber-400";
-  return "text-red-400";
+  if (pct >= 70) return "text-success";
+  if (pct >= 40) return "text-warning";
+  return "text-error";
 }
 
 function ringColor(score: number): string {
-  if (score >= 70) return "ring-emerald-500";
-  if (score >= 40) return "ring-amber-500";
-  return "ring-red-500";
+  if (score >= 70) return "ring-success";
+  if (score >= 40) return "ring-warning";
+  return "ring-error";
 }
 
 function bgBarColor(score: number, max: number): string {
   const pct = (score / max) * 100;
-  if (pct >= 70) return "bg-emerald-500";
-  if (pct >= 40) return "bg-amber-500";
-  return "bg-red-500";
+  if (pct >= 70) return "bg-success";
+  if (pct >= 40) return "bg-warning";
+  return "bg-error";
+}
+
+// ---------------------------------------------------------------------------
+// Icons (inline SVG, no deps)
+// ---------------------------------------------------------------------------
+function IconSearch({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+    </svg>
+  );
+}
+
+function IconCheck({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+    </svg>
+  );
+}
+
+function IconSpinner({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={`animate-spin ${className}`} viewBox="0 0 24 24" fill="none">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  );
+}
+
+function IconEye({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z" />
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    </svg>
+  );
+}
+
+function IconShield({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+    </svg>
+  );
+}
+
+function IconBolt({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z" />
+    </svg>
+  );
+}
+
+function IconChart({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />
+    </svg>
+  );
+}
+
+function IconCode({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5" />
+    </svg>
+  );
+}
+
+function IconUsers({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z" />
+    </svg>
+  );
 }
 
 // ---------------------------------------------------------------------------
@@ -85,7 +162,6 @@ function FreeScanner() {
 
       const json = await res.json();
       const d = json.data ?? json;
-      // API returns flat fields; component expects nested score object
       setResult({
         url: d.url,
         title: d.title,
@@ -114,19 +190,16 @@ function FreeScanner() {
           onChange={(e) => setUrl(e.target.value)}
           placeholder="https://example.com/your-page"
           required
-          className="flex-1 rounded-xl border border-gray-700 bg-gray-900 px-5 py-3.5 text-base text-white placeholder-gray-500 outline-none transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/40"
+          className="flex-1 rounded-xl border border-border bg-bg-secondary px-5 py-3.5 text-body text-text-primary placeholder-text-tertiary outline-none transition-all focus:border-brand focus:ring-2 focus:ring-brand/30"
         />
         <button
           type="submit"
           disabled={loading}
-          className="rounded-xl bg-indigo-600 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:bg-indigo-500 hover:shadow-indigo-500/30 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-xl bg-brand px-6 py-3.5 text-body-sm font-medium text-white shadow-lg shadow-brand/20 transition-all hover:bg-brand-hover hover:shadow-brand-hover/30 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {loading ? (
             <span className="flex items-center gap-2">
-              <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
+              <IconSpinner className="h-4 w-4" />
               Scanning...
             </span>
           ) : (
@@ -136,7 +209,7 @@ function FreeScanner() {
       </form>
 
       {error && (
-        <div className="mt-4 rounded-lg border border-red-800 bg-red-950/50 px-4 py-3 text-sm text-red-300">
+        <div className="mt-4 rounded-lg border border-error/30 bg-error/10 px-4 py-3 text-body-sm text-error">
           {error}
         </div>
       )}
@@ -150,60 +223,54 @@ function ScanResultCard({ result }: { result: ScanResult }) {
   const { score } = result;
 
   return (
-    <div className="mt-8 rounded-2xl border border-gray-800 bg-gray-900/80 p-6 backdrop-blur-sm">
-      {/* URL & title */}
-      <div className="mb-5 border-b border-gray-800 pb-4">
-        <p className="text-sm text-gray-400 truncate">{result.url}</p>
+    <div className="mt-8 rounded-2xl border border-border bg-bg-secondary/80 p-6 backdrop-blur-sm">
+      <div className="mb-5 border-b border-border pb-4">
+        <p className="text-caption text-text-tertiary truncate">{result.url}</p>
         {result.title && (
-          <p className="mt-1 font-medium text-white truncate">{result.title}</p>
+          <p className="mt-1 text-body-sm font-medium text-text-primary truncate">{result.title}</p>
         )}
       </div>
 
-      {/* Overall score */}
       <div className="mb-6 flex items-center justify-center">
-        <div
-          className={`flex h-28 w-28 items-center justify-center rounded-full ring-4 ${ringColor(score.overall)} bg-gray-950`}
-        >
+        <div className={`flex h-28 w-28 items-center justify-center rounded-full ring-4 ${ringColor(score.overall)} bg-bg-primary`}>
           <div className="text-center">
-            <div className={`text-4xl font-bold ${scoreColor(score.overall, 100)}`}>
+            <div className={`text-4xl font-bold tabular-nums ${scoreColor(score.overall, 100)}`}>
               {score.overall}
             </div>
-            <div className="text-xs text-gray-500">/ 100</div>
+            <div className="text-tiny text-text-tertiary">/ 100</div>
           </div>
         </div>
       </div>
 
-      {/* Three dimension bars */}
       <div className="space-y-4">
         <DimensionBar label="Extractability" score={score.extractability} max={40} />
         <DimensionBar label="Authority" score={score.authority} max={35} />
         <DimensionBar label="Freshness" score={score.freshness} max={25} />
       </div>
 
-      {/* Top issues preview */}
       {result.issues.length > 0 && (
-        <div className="mt-6 border-t border-gray-800 pt-5">
-          <h4 className="mb-3 text-sm font-semibold text-gray-300">Top Issues</h4>
+        <div className="mt-6 border-t border-border pt-5">
+          <h4 className="mb-3 text-body-sm font-semibold text-text-secondary">Top Issues</h4>
           <ul className="space-y-2">
             {result.issues.slice(0, 3).map((issue, i) => (
-              <li key={i} className="flex items-start gap-2 text-sm">
+              <li key={i} className="flex items-start gap-2 text-body-sm">
                 <span
-                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+                  className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-tiny font-bold ${
                     issue.severity === "critical"
-                      ? "bg-red-900/60 text-red-300"
+                      ? "bg-error/20 text-error"
                       : issue.severity === "warning"
-                        ? "bg-amber-900/60 text-amber-300"
-                        : "bg-blue-900/60 text-blue-300"
+                        ? "bg-warning/20 text-warning"
+                        : "bg-info/20 text-info"
                   }`}
                 >
                   {issue.severity === "critical" ? "!" : issue.severity === "warning" ? "~" : "i"}
                 </span>
-                <span className="text-gray-300">{issue.description}</span>
+                <span className="text-text-secondary">{issue.description}</span>
               </li>
             ))}
           </ul>
           {result.issues.length > 3 && (
-            <p className="mt-3 text-xs text-gray-500">
+            <p className="mt-3 text-caption text-text-tertiary">
               + {result.issues.length - 3} more issues found
             </p>
           )}
@@ -213,7 +280,7 @@ function ScanResultCard({ result }: { result: ScanResult }) {
       <div className="mt-6 text-center">
         <Link
           href="/auth/login"
-          className="inline-block rounded-lg bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-indigo-500"
+          className="inline-block rounded-lg bg-brand px-5 py-2.5 text-body-sm font-medium text-white transition-colors hover:bg-brand-hover"
         >
           Get Full Report &rarr;
         </Link>
@@ -222,25 +289,17 @@ function ScanResultCard({ result }: { result: ScanResult }) {
   );
 }
 
-function DimensionBar({
-  label,
-  score,
-  max,
-}: {
-  label: string;
-  score: number;
-  max: number;
-}) {
+function DimensionBar({ label, score, max }: { label: string; score: number; max: number }) {
   const pct = Math.round((score / max) * 100);
   return (
     <div>
-      <div className="mb-1 flex items-center justify-between text-sm">
-        <span className="text-gray-400">{label}</span>
-        <span className={`font-semibold ${scoreColor(score, max)}`}>
+      <div className="mb-1.5 flex items-center justify-between text-body-sm">
+        <span className="text-text-secondary">{label}</span>
+        <span className={`font-semibold tabular-nums ${scoreColor(score, max)}`}>
           {score}/{max}
         </span>
       </div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-gray-800">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-bg-tertiary">
         <div
           className={`h-full rounded-full transition-all duration-500 ${bgBarColor(score, max)}`}
           style={{ width: `${pct}%` }}
@@ -251,32 +310,29 @@ function DimensionBar({
 }
 
 // ---------------------------------------------------------------------------
-// Pain Points
+// Data
 // ---------------------------------------------------------------------------
 const painPoints = [
   {
-    icon: "?",
+    icon: <IconEye className="h-5 w-5 text-brand" />,
     title: "Invisible to AI",
     description:
       "ChatGPT, Perplexity, and Google AI Overviews cite your competitors, not you. Your content exists but AI cannot extract answers from it.",
   },
   {
-    icon: "$",
+    icon: <IconChart className="h-5 w-5 text-brand" />,
     title: "Losing Organic Traffic",
     description:
       "AI answer engines serve zero-click results. Users never reach your site. Your SEO playbook was built for a world that no longer exists.",
   },
   {
-    icon: "!",
+    icon: <IconShield className="h-5 w-5 text-brand" />,
     title: "No Visibility Into AI Search",
     description:
       "Google Analytics cannot tell you when AI cites your page. You have no idea where you stand in the answer-engine landscape.",
   },
 ];
 
-// ---------------------------------------------------------------------------
-// How It Works Steps
-// ---------------------------------------------------------------------------
 const steps = [
   {
     step: "1",
@@ -294,13 +350,43 @@ const steps = [
     step: "3",
     title: "Monitor",
     description:
-      "Track your AEO score over time. Get alerts when AI engines start (or stop) citing your pages. See which queries trigger your citations.",
+      "Track your AEO score over time. Get alerts when AI engines start or stop citing your pages. See which queries trigger citations.",
   },
 ];
 
-// ---------------------------------------------------------------------------
-// Pricing
-// ---------------------------------------------------------------------------
+const features = [
+  {
+    icon: <IconSearch className="h-5 w-5" />,
+    title: "AEO Score Engine",
+    description: "40+ ranking factors across extractability, authority, and freshness. Deterministic, transparent scoring.",
+    span: "lg:col-span-2",
+  },
+  {
+    icon: <IconCode className="h-5 w-5" />,
+    title: "Code-Level Fixes",
+    description: "Every issue includes a copy-paste fix. Schema markup, structured data, and content restructuring.",
+    span: "",
+  },
+  {
+    icon: <IconBolt className="h-5 w-5" />,
+    title: "Real-Time Monitoring",
+    description: "Daily rescans with trend tracking. Know instantly when your score changes.",
+    span: "",
+  },
+  {
+    icon: <IconUsers className="h-5 w-5" />,
+    title: "Competitor Intelligence",
+    description: "See how your AEO score compares to competitors. Find gaps they exploit that you don't.",
+    span: "",
+  },
+  {
+    icon: <IconChart className="h-5 w-5" />,
+    title: "Citation Tracking",
+    description: "Monitor when ChatGPT, Perplexity, or Google AI Overviews cite your content.",
+    span: "",
+  },
+];
+
 const plans = [
   {
     name: "Starter",
@@ -344,13 +430,20 @@ const plans = [
       "Daily rescans",
       "1,000 monitored queries",
       "Full API access",
-      "White-label PDF reports",
+      "White-label reports",
       "Client dashboards",
-      "Dedicated account manager",
+      "Dedicated support",
     ],
     cta: "Contact Sales",
     highlighted: false,
   },
+];
+
+const stats = [
+  { value: "40+", label: "AEO factors analyzed" },
+  { value: "3", label: "AI engines tracked" },
+  { value: "<10s", label: "Scan time per page" },
+  { value: "500", label: "Pages per scan" },
 ];
 
 // ---------------------------------------------------------------------------
@@ -359,208 +452,229 @@ const plans = [
 export default function Home() {
   return (
     <main>
-      {/* ------------------------------------------------------------------ */}
-      {/* Hero */}
-      {/* ------------------------------------------------------------------ */}
-      <section className="relative overflow-hidden">
-        {/* Subtle gradient background */}
-        <div className="pointer-events-none absolute inset-0 -z-10">
-          <div className="absolute left-1/2 top-0 h-[600px] w-[900px] -translate-x-1/2 rounded-full bg-indigo-600/10 blur-3xl" />
-        </div>
-
-        <div className="mx-auto max-w-4xl px-4 pb-20 pt-24 text-center sm:px-6 lg:px-8">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-gray-800 bg-gray-900/60 px-4 py-1.5 text-xs font-medium text-gray-300">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400" />
-            Now in public beta
+      {/* ================================================================= */}
+      {/* HERO — centered, glow background, dual CTA */}
+      {/* ================================================================= */}
+      <section className="relative overflow-hidden hero-glow">
+        <div className="mx-auto max-w-7xl px-6 pt-24 pb-20 text-center lg:pt-32">
+          {/* Announcement badge */}
+          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-bg-secondary px-4 py-1.5">
+            <span className="inline-block h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
+            <span className="text-caption text-text-secondary">Now in public beta</span>
           </div>
 
-          <h1 className="text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">
-            Is AI citing{" "}
-            <span className="bg-gradient-to-r from-indigo-400 to-purple-400 bg-clip-text text-transparent">
-              your content
-            </span>
-            ?
+          {/* Headline — under 8 words (research optimal) */}
+          <h1 className="text-display font-bold text-text-primary mx-auto max-w-4xl text-balance">
+            Get cited by{" "}
+            <span className="text-gradient">AI answer engines</span>
           </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-lg text-gray-400">
+
+          {/* Subtext */}
+          <p className="mt-6 text-body-lg text-text-secondary mx-auto max-w-2xl text-pretty">
             Score any page for AI-citability. Get actionable fixes to appear in ChatGPT,
             Perplexity, and Google AI Overviews.
           </p>
 
-          <div className="mt-10">
+          {/* Scanner CTA */}
+          <div className="mt-12">
             <FreeScanner />
           </div>
 
-          <p className="mt-4 text-xs text-gray-600">
+          <p className="mt-4 text-caption text-text-tertiary">
             No sign-up required. Scan any public URL instantly.
           </p>
         </div>
       </section>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Social proof bar */}
-      {/* ------------------------------------------------------------------ */}
-      <section className="border-y border-gray-800/50 bg-gray-900/30 py-6">
-        <div className="mx-auto flex max-w-4xl flex-wrap items-center justify-center gap-x-10 gap-y-3 px-4 text-sm text-gray-500">
-          <span>40+ AEO ranking factors</span>
-          <span className="hidden sm:inline text-gray-700">|</span>
-          <span>3 AI engines tracked</span>
-          <span className="hidden sm:inline text-gray-700">|</span>
-          <span>Actionable fixes, not just scores</span>
+      {/* ================================================================= */}
+      {/* STATS BAR — big numbers (Stripe pattern) */}
+      {/* ================================================================= */}
+      <section className="border-y border-border">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid grid-cols-2 gap-8 py-12 md:grid-cols-4">
+            {stats.map((stat) => (
+              <div key={stat.label} className="text-center">
+                <p className="text-h1 font-bold text-text-primary tabular-nums">{stat.value}</p>
+                <p className="mt-1 text-body-sm text-text-tertiary">{stat.label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Problem Section */}
-      {/* ------------------------------------------------------------------ */}
-      <section className="py-20">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-white">
-              SEO got you to page one. AI search is rewriting the rules.
+      {/* ================================================================= */}
+      {/* PROBLEM — pain points grid */}
+      {/* ================================================================= */}
+      <section className="py-32">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mx-auto max-w-2xl text-center mb-16">
+            <h2 className="text-h2 font-semibold text-text-primary">
+              SEO got you to page one. AI search rewrites the rules.
             </h2>
-            <p className="mx-auto mt-4 max-w-2xl text-gray-400">
+            <p className="mt-4 text-body-lg text-text-secondary">
               Answer engines generate responses, not links. If your content is not
               structured for extraction, AI will cite someone else.
             </p>
           </div>
 
-          <div className="mt-14 grid gap-8 md:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-3">
             {painPoints.map((point) => (
               <div
                 key={point.title}
-                className="rounded-xl border border-gray-800 bg-gray-900/50 p-6"
+                className="group rounded-2xl border border-border bg-bg-secondary p-8 transition-all hover:border-border-hover card-glow"
               >
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600/20 text-lg font-bold text-indigo-400">
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle">
                   {point.icon}
                 </div>
-                <h3 className="mb-2 text-lg font-semibold text-white">{point.title}</h3>
-                <p className="text-sm leading-relaxed text-gray-400">{point.description}</p>
+                <h3 className="text-h4 font-semibold text-text-primary">{point.title}</h3>
+                <p className="mt-2 text-body-sm text-text-secondary leading-relaxed">{point.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* How It Works */}
-      {/* ------------------------------------------------------------------ */}
-      <section className="border-y border-gray-800/50 bg-gray-900/30 py-20">
-        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-white">How It Works</h2>
-            <p className="mx-auto mt-4 max-w-xl text-gray-400">
+      {/* ================================================================= */}
+      {/* FEATURES — Bento grid (Vercel/Linear pattern) */}
+      {/* ================================================================= */}
+      <section className="py-32 border-t border-border">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mx-auto max-w-2xl text-center mb-16">
+            <h2 className="text-h2 font-semibold text-text-primary">
+              Built for AEO professionals
+            </h2>
+            <p className="mt-4 text-body-lg text-text-secondary">
+              Every feature designed around real citation workflows.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((feat) => (
+              <div
+                key={feat.title}
+                className={`group rounded-2xl border border-border bg-bg-secondary p-8 transition-all hover:border-border-hover card-glow ${feat.span}`}
+              >
+                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand">
+                  {feat.icon}
+                </div>
+                <h3 className="text-h4 font-semibold text-text-primary">{feat.title}</h3>
+                <p className="mt-2 text-body-sm text-text-secondary">{feat.description}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ================================================================= */}
+      {/* HOW IT WORKS — 3-step numbered */}
+      {/* ================================================================= */}
+      <section className="py-32 bg-bg-secondary border-y border-border">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mx-auto max-w-2xl text-center mb-16">
+            <h2 className="text-h2 font-semibold text-text-primary">How it works</h2>
+            <p className="mt-4 text-body-lg text-text-secondary">
               Three steps to get your content cited by AI answer engines.
             </p>
           </div>
 
-          <div className="mt-14 grid gap-8 md:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-3">
             {steps.map((s) => (
               <div key={s.step} className="text-center">
-                <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600 text-xl font-bold text-white">
+                <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-h3 font-bold text-white shadow-lg shadow-brand/20">
                   {s.step}
                 </div>
-                <h3 className="mb-2 text-xl font-semibold text-white">{s.title}</h3>
-                <p className="text-sm leading-relaxed text-gray-400">{s.description}</p>
+                <h3 className="text-h3 font-semibold text-text-primary">{s.title}</h3>
+                <p className="mt-3 text-body-sm text-text-secondary mx-auto max-w-xs">{s.description}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Pricing */}
-      {/* ------------------------------------------------------------------ */}
-      <section id="pricing" className="py-20">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h2 className="text-3xl font-bold text-white">Simple, Transparent Pricing</h2>
-            <p className="mx-auto mt-4 max-w-xl text-gray-400">
-              Start free for 14 days. No credit card required.
-            </p>
-          </div>
+      {/* ================================================================= */}
+      {/* PRICING — 3-col with highlighted plan */}
+      {/* ================================================================= */}
+      <section id="pricing" className="py-32">
+        <div className="mx-auto max-w-7xl px-6 text-center">
+          <h2 className="text-h2 font-semibold text-text-primary">
+            Simple, transparent pricing
+          </h2>
+          <p className="mt-4 text-body-lg text-text-secondary">
+            Start free for 14 days. No credit card required.
+          </p>
 
-          <div className="mt-14 grid gap-8 lg:grid-cols-3">
+          <div className="mt-16 grid gap-6 text-left md:grid-cols-3">
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className={`relative rounded-2xl border p-8 ${
+                className={`relative rounded-2xl p-8 transition-all ${
                   plan.highlighted
-                    ? "border-indigo-500 bg-gray-900/80 shadow-lg shadow-indigo-600/10"
-                    : "border-gray-800 bg-gray-900/50"
+                    ? "border-2 border-brand bg-bg-secondary shadow-glow"
+                    : "border border-border bg-bg-secondary hover:border-border-hover"
                 }`}
               >
                 {plan.highlighted && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 rounded-full bg-indigo-600 px-4 py-1 text-xs font-semibold text-white">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand px-3 py-1 text-tiny font-medium text-white">
                     Most Popular
                   </div>
                 )}
 
-                <h3 className="text-lg font-semibold text-white">{plan.name}</h3>
-                <p className="mt-1 text-sm text-gray-400">{plan.description}</p>
+                <h3 className="text-h5 font-semibold text-text-primary">{plan.name}</h3>
+                <p className="mt-2 text-caption text-text-tertiary">{plan.description}</p>
 
-                <div className="mt-6 flex items-baseline gap-1">
-                  <span className="text-4xl font-extrabold text-white">${plan.price}</span>
-                  <span className="text-sm text-gray-500">/mo</span>
-                </div>
-
-                <ul className="mt-8 space-y-3">
-                  {plan.features.map((feat) => (
-                    <li key={feat} className="flex items-start gap-3 text-sm text-gray-300">
-                      <svg
-                        className="mt-0.5 h-4 w-4 shrink-0 text-indigo-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={2.5}
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M4.5 12.75l6 6 9-13.5"
-                        />
-                      </svg>
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
+                <p className="mt-6">
+                  <span className="text-h1 font-bold text-text-primary tabular-nums">${plan.price}</span>
+                  <span className="text-body-sm text-text-tertiary">/month</span>
+                </p>
 
                 <Link
                   href="/auth/login"
-                  className={`mt-8 block w-full rounded-lg py-3 text-center text-sm font-semibold transition-colors ${
+                  className={`mt-8 block w-full rounded-lg py-3 text-center text-body-sm font-medium transition-colors ${
                     plan.highlighted
-                      ? "bg-indigo-600 text-white hover:bg-indigo-500"
-                      : "border border-gray-700 bg-gray-800 text-gray-200 hover:bg-gray-700"
+                      ? "bg-brand text-white hover:bg-brand-hover"
+                      : "border border-border text-text-primary hover:bg-bg-tertiary"
                   }`}
                 >
                   {plan.cta}
                 </Link>
+
+                <ul className="mt-8 space-y-3">
+                  {plan.features.map((feat) => (
+                    <li key={feat} className="flex items-center gap-3 text-body-sm text-text-secondary">
+                      <IconCheck className="h-4 w-4 shrink-0 text-success" />
+                      {feat}
+                    </li>
+                  ))}
+                </ul>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ------------------------------------------------------------------ */}
-      {/* Final CTA */}
-      {/* ------------------------------------------------------------------ */}
-      <section className="border-t border-gray-800/50 bg-gray-900/30 py-20">
-        <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-          <h2 className="text-3xl font-bold text-white">
-            Stop guessing. Start getting cited.
-          </h2>
-          <p className="mx-auto mt-4 max-w-lg text-gray-400">
-            Join the beta and discover exactly where your content stands in the
-            AI answer-engine landscape.
-          </p>
-          <Link
-            href="/auth/login"
-            className="mt-8 inline-block rounded-xl bg-indigo-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg shadow-indigo-600/25 transition-all hover:bg-indigo-500 hover:shadow-indigo-500/30"
-          >
-            Start Your 14-Day Free Trial
-          </Link>
-          <p className="mt-3 text-xs text-gray-600">
-            No credit card required. Cancel anytime.
-          </p>
+      {/* ================================================================= */}
+      {/* FINAL CTA — contained card with mesh gradient */}
+      {/* ================================================================= */}
+      <section className="py-32">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="rounded-3xl border border-border p-16 text-center relative overflow-hidden mesh-gradient">
+            <h2 className="text-h1 font-bold text-text-primary relative z-10">
+              Stop guessing. Start getting cited.
+            </h2>
+            <p className="mt-4 text-body-lg text-text-secondary relative z-10 mx-auto max-w-xl">
+              Join the beta and discover exactly where your content stands in the
+              AI answer-engine landscape.
+            </p>
+            <Link
+              href="/auth/login"
+              className="mt-8 inline-block rounded-lg bg-brand px-8 py-4 text-body font-medium text-white shadow-lg shadow-brand/20 hover:bg-brand-hover transition-all relative z-10"
+            >
+              Start Your 14-Day Free Trial
+            </Link>
+            <p className="mt-4 text-caption text-text-tertiary relative z-10">
+              No credit card required. Cancel anytime.
+            </p>
+          </div>
         </div>
       </section>
     </main>

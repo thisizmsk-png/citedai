@@ -1,1 +1,235 @@
 @import "tailwindcss";
+@import "@fontsource-variable/inter";
+
+/* ============================================================
+   CitedAI Design System — Tailwind v4 Theme
+   Derived from DESIGN_SYSTEM.md (Linear/Vercel/Stripe research)
+   ============================================================ */
+
+@theme {
+  /* --- Font Family --- */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "Geist Mono", "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+
+  /* Font sizes and letter-spacing defined as @utility below */
+
+  /* --- Semantic Colors (Dark Theme) --- */
+
+  /* Surfaces */
+  --color-bg-primary: #0f0f12;
+  --color-bg-secondary: #18181b;
+  --color-bg-tertiary: #27272a;
+  --color-bg-hover: #27272a;
+  --color-bg-active: #3f3f46;
+
+  /* Text */
+  --color-text-primary: #fafafa;
+  --color-text-secondary: #a1a1aa;
+  --color-text-tertiary: #71717a;
+  --color-text-disabled: #52525b;
+  --color-text-inverse: #0f0f12;
+
+  /* Borders */
+  --color-border: #27272a;
+  --color-border-hover: #3f3f46;
+  --color-border-active: #52525b;
+  --color-border-accent: #6366f1;
+
+  /* Brand / Primary (indigo-violet) */
+  --color-brand: #6366f1;
+  --color-brand-hover: #818cf8;
+  --color-brand-active: #4f46e5;
+  --color-brand-subtle: rgba(99, 102, 241, 0.1);
+  --color-brand-muted: rgba(99, 102, 241, 0.15);
+
+  /* Accent (cyan-teal) */
+  --color-accent: #06b6d4;
+  --color-accent-light: #67e8f9;
+
+  /* Status */
+  --color-success: #22c55e;
+  --color-warning: #f59e0b;
+  --color-error: #ef4444;
+  --color-info: #06b6d4;
+
+  /* --- Border Radius --- */
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 12px;
+  --radius-2xl: 16px;
+  --radius-3xl: 24px;
+
+  /* --- Shadows (dark theme = heavier opacity) --- */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.4);
+  --shadow-xl: 0 16px 50px rgba(0, 0, 0, 0.5);
+  --shadow-glow: 0 0 40px -10px rgba(99, 102, 241, 0.3);
+  --shadow-glow-lg: 0 0 80px -20px rgba(99, 102, 241, 0.4);
+
+  /* --- Animations --- */
+  --animate-fade-in: fade-in 0.6s ease-out forwards;
+  --animate-fade-up: fade-up 0.6s ease-out forwards;
+  --animate-slide-in: slide-in 0.4s ease-out forwards;
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 20px -5px rgba(99, 102, 241, 0.2); }
+  50% { box-shadow: 0 0 40px -5px rgba(99, 102, 241, 0.4); }
+}
+
+/* ============================================================
+   Global Base Styles
+   ============================================================ */
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* ============================================================
+   Typography Utilities (Tailwind v4 @utility)
+   ============================================================ */
+
+@utility text-display {
+  font-size: 4.5rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: 700;
+}
+
+@utility text-h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+
+@utility text-h2 {
+  font-size: 2.25rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+@utility text-h3 {
+  font-size: 1.5rem;
+  line-height: 1.3;
+  letter-spacing: -0.015em;
+  font-weight: 600;
+}
+
+@utility text-h4 {
+  font-size: 1.25rem;
+  line-height: 1.4;
+  letter-spacing: -0.01em;
+  font-weight: 600;
+}
+
+@utility text-h5 {
+  font-size: 1rem;
+  line-height: 1.5;
+  font-weight: 600;
+}
+
+@utility text-body-lg {
+  font-size: 1.125rem;
+  line-height: 1.6;
+}
+
+@utility text-body {
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+@utility text-body-sm {
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+@utility text-caption {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+}
+
+@utility text-tiny {
+  font-size: 0.75rem;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+/* ============================================================
+   Design System Utilities
+   ============================================================ */
+
+/* Hero glow (Raycast-style radial) */
+.hero-glow {
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(99, 102, 241, 0.15) 0%, transparent 70%),
+    var(--color-bg-primary);
+}
+
+/* Mesh gradient (Stripe-style) */
+.mesh-gradient {
+  background:
+    radial-gradient(at 20% 20%, rgba(99, 102, 241, 0.12) 0%, transparent 50%),
+    radial-gradient(at 80% 50%, rgba(6, 182, 212, 0.08) 0%, transparent 50%),
+    radial-gradient(at 40% 80%, rgba(129, 140, 248, 0.06) 0%, transparent 50%),
+    var(--color-bg-primary);
+}
+
+/* Accent text gradient (Vercel-style) */
+.text-gradient {
+  background: linear-gradient(135deg, #818cf8, #22d3ee);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card glow on hover (Linear-style) */
+.card-glow {
+  transition: box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+}
+.card-glow:hover {
+  box-shadow: 0 0 0 1px var(--color-border-hover), 0 0 40px -10px rgba(99, 102, 241, 0.15);
+}
+
+/* Scroll reveal (use with IntersectionObserver) */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Tabular nums for data displays */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
