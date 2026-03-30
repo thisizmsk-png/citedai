@@ -37,9 +37,9 @@
   --color-brand-subtle: rgba(10, 10, 12, 0.04);
   --color-brand-muted: rgba(10, 10, 12, 0.08);
 
-  /* Accent — blue, used ONLY for links and interactive highlights */
-  --color-accent: #3186FF;
-  --color-accent-hover: #4EA0FF;
+  /* Accent — warm coral (NOT Gemini blue, NOT AI purple) */
+  --color-accent: #E5484D;
+  --color-accent-hover: #F2555A;
 
   /* Status */
   --color-success: #16a34a;
