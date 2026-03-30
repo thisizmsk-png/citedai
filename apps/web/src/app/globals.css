@@ -139,54 +139,59 @@ body {
    Typography Utilities
    ============================================================ */
 
+/* Typography: Gemini-grade -0.04em headings, Botronics-grade 1.0 line-height */
+
 @utility text-display {
   font-size: 4.5rem;
   line-height: 1;
   letter-spacing: -0.04em;
-  font-weight: 700;
+  font-weight: 500; /* medium, not bold — Botronics/Gemini pattern */
 }
 
 @utility text-h1 {
-  font-size: 3.25rem;
-  line-height: 1.08;
-  letter-spacing: -0.035em;
-  font-weight: 700;
+  font-size: 3.5rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: 500;
 }
 
 @utility text-h2 {
-  font-size: 2.25rem;
-  line-height: 1.15;
-  letter-spacing: -0.025em;
-  font-weight: 600;
+  font-size: 2.5rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  font-weight: 500;
 }
 
 @utility text-h3 {
   font-size: 1.5rem;
-  line-height: 1.3;
-  letter-spacing: -0.015em;
-  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.03em;
+  font-weight: 500;
 }
 
 @utility text-h4 {
   font-size: 1.25rem;
-  line-height: 1.4;
-  letter-spacing: -0.01em;
-  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  font-weight: 500;
 }
 
 @utility text-body-lg {
-  font-size: 1.125rem;
-  line-height: 1.65;
+  font-size: 1.25rem;
+  line-height: 1.4;
+  letter-spacing: 0.2px; /* Gemini: slight positive on body */
 }
 
 @utility text-body {
   font-size: 1rem;
-  line-height: 1.6;
+  line-height: 1.5;
+  letter-spacing: 0.1px;
 }
 
 @utility text-body-sm {
   font-size: 0.875rem;
   line-height: 1.5;
+  letter-spacing: 0.1px;
 }
 
 @utility text-caption {
@@ -220,11 +225,13 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* Glass card — sharp corners (Botronics-inspired, no border-radius) */
 .glass-card {
   background: rgba(28, 28, 34, 0.6);
   backdrop-filter: blur(16px) saturate(140%);
   -webkit-backdrop-filter: blur(16px) saturate(140%);
   border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 2px; /* near-sharp — intentional, not default */
   transition: border-color 0.2s ease, box-shadow 0.3s ease;
 }
 
@@ -369,6 +376,50 @@ body {
 .stagger.visible > *:nth-child(3) { transition-delay: 160ms; opacity: 1; transform: translateY(0); }
 .stagger.visible > *:nth-child(4) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
 .stagger.visible > *:nth-child(5) { transition-delay: 320ms; opacity: 1; transform: translateY(0); }
+
+/* --- Botronics-style section label (muted, uppercase, different weight) --- */
+.section-label {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+/* --- Botronics-style sharp button (no border-radius) --- */
+.btn-sharp {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 0;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-sharp-primary {
+  background: var(--color-brand);
+  color: white;
+}
+.btn-sharp-primary:hover {
+  background: var(--color-brand-hover);
+}
+
+.btn-sharp-outline {
+  background: transparent;
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-hover);
+}
+.btn-sharp-outline:hover {
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+}
 
 /* --- Tabular nums --- */
 .tabular-nums { font-variant-numeric: tabular-nums; }

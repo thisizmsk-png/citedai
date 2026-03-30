@@ -32,7 +32,7 @@ function Logo() {
    ----------------------------------------------------------------------- */
 function Header() {
   return (
-    <header className="fixed top-0 z-50 w-full border-b border-border bg-bg-primary/80 backdrop-blur-xl">
+    <header className="glass fixed top-0 z-50 w-full border-b border-border">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
