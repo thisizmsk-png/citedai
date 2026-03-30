@@ -332,8 +332,21 @@ function FreeScanner() {
 function ScanResultCard({ result }: { result: ScanResult }) {
   const { score } = result;
 
+  // Score-based micro-delight message
+  const verdict = score.overall >= 70
+    ? { text: "Strong AEO readiness", color: "text-success" }
+    : score.overall >= 40
+    ? { text: "Room to improve", color: "text-warning" }
+    : { text: "Needs attention", color: "text-error" };
+
   return (
     <div className="mt-8 glass-card rounded-sm p-6">
+      {/* Micro-delight: score verdict */}
+      <div className="mb-4 flex items-center justify-between">
+        <p className={`text-body-sm font-medium ${verdict.color}`}>{verdict.text}</p>
+        <p className="text-caption text-text-tertiary">Score ready</p>
+      </div>
+
       <div className="mb-5 border-b border-border pb-4">
         <p className="text-caption text-text-tertiary truncate">{result.url}</p>
         {result.title && (
@@ -353,9 +366,9 @@ function ScanResultCard({ result }: { result: ScanResult }) {
       </div>
 
       <div className="space-y-4">
-        <DimensionBar label="Extractability" score={score.extractability} max={40} />
-        <DimensionBar label="Authority" score={score.authority} max={35} />
-        <DimensionBar label="Freshness" score={score.freshness} max={25} />
+        <DimensionBar label="Extractability" score={score.extractability} max={40} hint="How easily AI can extract answers from your content" />
+        <DimensionBar label="Authority" score={score.authority} max={35} hint="Signals that make AI trust your content as a source" />
+        <DimensionBar label="Freshness" score={score.freshness} max={25} hint="How current and up-to-date your content appears" />
       </div>
 
       {result.issues.length > 0 && (
@@ -399,12 +412,12 @@ function ScanResultCard({ result }: { result: ScanResult }) {
   );
 }
 
-function DimensionBar({ label, score, max }: { label: string; score: number; max: number }) {
+function DimensionBar({ label, score, max, hint }: { label: string; score: number; max: number; hint?: string }) {
   const pct = Math.round((score / max) * 100);
   return (
     <div>
       <div className="mb-1.5 flex items-center justify-between text-body-sm">
-        <span className="text-text-secondary">{label}</span>
+        <span className="text-text-secondary cursor-help" title={hint}>{label}</span>
         <span className={`font-medium tabular-nums ${scoreColor(score, max)}`}>
           {score}/{max}
         </span>
@@ -591,6 +604,9 @@ export default function Home() {
             Score any page for AI-citability. Get actionable fixes to appear in ChatGPT,
             Perplexity, and Google AI Overviews.
           </p>
+          <p className="reveal mt-3 text-caption text-text-tertiary mx-auto max-w-xl">
+            <abbr title="Answer Engine Optimization — the practice of structuring content so AI systems cite it in generated answers" className="no-underline border-b border-dotted border-text-tertiary cursor-help">AEO</abbr> (Answer Engine Optimization) is the new SEO for AI-powered search.
+          </p>
 
           {/* Scanner */}
           <div className="reveal mt-14">
@@ -664,7 +680,7 @@ export default function Home() {
             <p className="section-label mb-4">Features</p>
             <h2 className="text-h2 text-text-primary">
               Built for{" "}
-              <span className="text-accent">AEO professionals</span>
+              <span className="text-accent" title="Answer Engine Optimization">AEO</span> professionals
             </h2>
             <p className="mt-5 text-body-lg text-text-secondary">
               Every feature designed around real citation workflows.
