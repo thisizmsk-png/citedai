@@ -429,7 +429,7 @@ const painPoints = [
     title: "Invisible to AI",
     description:
       "ChatGPT, Perplexity, and Google AI Overviews cite your competitors, not you. Your content exists but AI cannot extract answers from it.",
-    color: "#6366f1",
+    color: "#3186FF",
   },
   {
     icon: <IconChart className="h-5 w-5" />,
@@ -474,7 +474,7 @@ const features = [
     title: "AEO Score Engine",
     description:
       "40+ ranking factors across extractability, authority, and freshness. Deterministic, transparent scoring you can act on today.",
-    accent: "#6366f1",
+    accent: "#3186FF",
     large: true,
   },
   {

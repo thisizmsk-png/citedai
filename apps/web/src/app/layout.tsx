@@ -19,7 +19,7 @@ function Logo() {
       <circle cx="14.5" cy="14.5" r="3" fill="#fff" />
       <defs>
         <linearGradient id="logo-gradient" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6366f1" />
+          <stop stopColor="#3186FF" />
           <stop offset="1" stopColor="#06b6d4" />
         </linearGradient>
       </defs>
