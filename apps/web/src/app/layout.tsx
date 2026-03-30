@@ -31,20 +31,20 @@ function Header() {
         {/* Logo */}
         <Link href="/" className="flex items-center gap-2.5">
           <Logo />
-          <span className="text-h5 font-semibold text-text-primary tracking-tight">
+          <span className="text-h5 font-medium text-text-primary tracking-tight">
             Cited<span className="text-brand">AI</span>
           </span>
         </Link>
 
         {/* Center links (3-5 max) */}
         <nav className="hidden items-center gap-8 md:flex">
-          <Link href="/#features" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">
+          <Link href="/#features" className="py-2 text-body-sm text-text-secondary transition-colors hover:text-text-primary">
             Features
           </Link>
-          <Link href="/#pricing" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">
+          <Link href="/#pricing" className="py-2 text-body-sm text-text-secondary transition-colors hover:text-text-primary">
             Pricing
           </Link>
-          <Link href="/dashboard" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">
+          <Link href="/dashboard" className="py-2 text-body-sm text-text-secondary transition-colors hover:text-text-primary">
             Dashboard
           </Link>
         </nav>
@@ -81,7 +81,7 @@ function Footer() {
           <div className="col-span-2 md:col-span-1">
             <Link href="/" className="flex items-center gap-2.5">
               <Logo />
-              <span className="text-h5 font-semibold text-text-primary tracking-tight">
+              <span className="text-h5 font-medium text-text-primary tracking-tight">
                 Cited<span className="text-brand">AI</span>
               </span>
             </Link>

@@ -273,7 +273,7 @@ function FreeScanner() {
   return (
     <div className="mx-auto w-full max-w-2xl">
       <form onSubmit={handleScan} className="relative">
-        <div className="glass-card flex items-center gap-2 rounded-sm p-2">
+        <div className="glass-card flex flex-col sm:flex-row items-stretch sm:items-center gap-2 rounded-sm p-2">
           <div className="flex flex-1 items-center gap-3 pl-4">
             <IconSearch className="h-5 w-5 text-text-tertiary shrink-0" />
             <input
@@ -351,7 +351,7 @@ function ScanResultCard({ result }: { result: ScanResult }) {
 
       {result.issues.length > 0 && (
         <div className="mt-6 border-t border-border pt-5">
-          <h4 className="mb-3 text-body-sm font-semibold text-text-secondary">Top Issues</h4>
+          <h4 className="mb-3 text-body-sm font-medium text-text-secondary">Top Issues</h4>
           <ul className="space-y-2">
             {result.issues.slice(0, 3).map((issue, i) => (
               <li key={i} className="flex items-start gap-2 text-body-sm">
@@ -396,7 +396,7 @@ function DimensionBar({ label, score, max }: { label: string; score: number; max
     <div>
       <div className="mb-1.5 flex items-center justify-between text-body-sm">
         <span className="text-text-secondary">{label}</span>
-        <span className={`font-semibold tabular-nums ${scoreColor(score, max)}`}>
+        <span className={`font-medium tabular-nums ${scoreColor(score, max)}`}>
           {score}/{max}
         </span>
       </div>
@@ -613,7 +613,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="stagger grid gap-5 md:grid-cols-3">
+          <div className="stagger grid gap-6 md:grid-cols-3">
             {painPoints.map((point) => (
               <div
                 key={point.title}
@@ -649,7 +649,7 @@ export default function Home() {
       {/* ================================================================= */}
       {/* FEATURES — Asymmetric bento grid */}
       {/* ================================================================= */}
-      <section id="features" className="py-32 border-t border-border relative">
+      <section id="features" className="py-32 relative">
         <div className="mx-auto max-w-7xl px-6">
           <div className="reveal mx-auto max-w-2xl text-center mb-16">
             <p className="section-label mb-4">Features</p>
@@ -692,7 +692,7 @@ export default function Home() {
       {/* ================================================================= */}
       {/* HOW IT WORKS — connected steps with gradient line */}
       {/* ================================================================= */}
-      <section id="how-it-works" className="py-32 bg-bg-secondary border-y border-border relative noise">
+      <section id="how-it-works" className="py-24 bg-bg-secondary border-y border-border relative noise">
         <div className="relative z-10 mx-auto max-w-7xl px-6">
           <div className="reveal mx-auto max-w-2xl text-center mb-20">
             <p className="section-label mb-4">How It Works</p>
@@ -766,7 +766,7 @@ export default function Home() {
                   <p className="mt-2 text-caption text-text-tertiary">{plan.description}</p>
 
                   <p className="mt-6">
-                    <span className="text-h1 font-bold text-text-primary tabular-nums">${plan.price}</span>
+                    <span className="text-h1 text-text-primary tabular-nums">${plan.price}</span>
                     <span className="text-body-sm text-text-tertiary">/month</span>
                   </p>
 
