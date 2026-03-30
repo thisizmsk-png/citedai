@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 
 // ---------------------------------------------------------------------------
@@ -52,6 +52,53 @@ function bgBarColor(score: number, max: number): string {
   if (pct >= 70) return "bg-success";
   if (pct >= 40) return "bg-warning";
   return "bg-error";
+}
+
+// ---------------------------------------------------------------------------
+// Scroll Reveal Hook
+// ---------------------------------------------------------------------------
+function useScrollReveal() {
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
+    );
+
+    const revealElements = document.querySelectorAll(".reveal, .stagger");
+    revealElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, []);
+}
+
+// ---------------------------------------------------------------------------
+// Spotlight Card Hook
+// ---------------------------------------------------------------------------
+function useSpotlight(ref: React.RefObject<HTMLElement | null>) {
+  const handleMouseMove = useCallback(
+    (e: MouseEvent) => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      ref.current.style.setProperty("--mouse-x", `${x}px`);
+      ref.current.style.setProperty("--mouse-y", `${y}px`);
+    },
+    [ref]
+  );
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.addEventListener("mousemove", handleMouseMove);
+    return () => el.removeEventListener("mousemove", handleMouseMove);
+  }, [ref, handleMouseMove]);
 }
 
 // ---------------------------------------------------------------------------
@@ -131,6 +178,62 @@ function IconUsers({ className = "h-5 w-5" }: { className?: string }) {
   );
 }
 
+function IconArrowRight({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+    </svg>
+  );
+}
+
+function IconTarget({ className = "h-5 w-5" }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor">
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="6" />
+      <circle cx="12" cy="12" r="2" />
+    </svg>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Spotlight Feature Card
+// ---------------------------------------------------------------------------
+function SpotlightFeatureCard({
+  icon,
+  title,
+  description,
+  accentColor,
+  className = "",
+}: {
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  accentColor: string;
+  className?: string;
+}) {
+  const cardRef = useRef<HTMLDivElement>(null);
+  useSpotlight(cardRef);
+
+  return (
+    <div
+      ref={cardRef}
+      className={`glass-card spotlight-card card-lift rounded-2xl p-8 ${className}`}
+    >
+      <div
+        className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl"
+        style={{ backgroundColor: `${accentColor}15` }}
+      >
+        <span style={{ color: accentColor }}>{icon}</span>
+      </div>
+      <h3 className="text-h4 text-text-primary">{title}</h3>
+      <p className="mt-3 text-body-sm text-text-secondary leading-relaxed">
+        {description}
+      </p>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // Free URL Scanner Component
 // ---------------------------------------------------------------------------
@@ -183,33 +286,41 @@ function FreeScanner() {
 
   return (
     <div className="mx-auto w-full max-w-2xl">
-      <form onSubmit={handleScan} className="flex gap-3">
-        <input
-          type="url"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="https://example.com/your-page"
-          required
-          className="flex-1 rounded-xl border border-border bg-bg-secondary px-5 py-3.5 text-body text-text-primary placeholder-text-tertiary outline-none transition-all focus:border-brand focus:ring-2 focus:ring-brand/30"
-        />
-        <button
-          type="submit"
-          disabled={loading}
-          className="rounded-xl bg-brand px-6 py-3.5 text-body-sm font-medium text-white shadow-lg shadow-brand/20 transition-all hover:bg-brand-hover hover:shadow-brand-hover/30 disabled:cursor-not-allowed disabled:opacity-60"
-        >
-          {loading ? (
-            <span className="flex items-center gap-2">
-              <IconSpinner className="h-4 w-4" />
-              Scanning...
-            </span>
-          ) : (
-            "Scan Free"
-          )}
-        </button>
+      <form onSubmit={handleScan} className="relative">
+        <div className="glass-card flex items-center gap-2 rounded-2xl p-2">
+          <div className="flex flex-1 items-center gap-3 pl-4">
+            <IconSearch className="h-5 w-5 text-text-tertiary shrink-0" />
+            <input
+              type="url"
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              placeholder="https://example.com/your-page"
+              required
+              className="w-full bg-transparent py-3 text-body text-text-primary placeholder-text-tertiary outline-none"
+            />
+          </div>
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-shimmer shrink-0 rounded-xl bg-brand px-6 py-3.5 text-body-sm font-medium text-white transition-all hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading ? (
+              <span className="flex items-center gap-2">
+                <IconSpinner className="h-4 w-4" />
+                Scanning...
+              </span>
+            ) : (
+              <span className="flex items-center gap-2">
+                Scan Free
+                <IconArrowRight className="h-4 w-4" />
+              </span>
+            )}
+          </button>
+        </div>
       </form>
 
       {error && (
-        <div className="mt-4 rounded-lg border border-error/30 bg-error/10 px-4 py-3 text-body-sm text-error">
+        <div className="mt-4 rounded-xl border border-error/20 bg-error/5 px-4 py-3 text-body-sm text-error">
           {error}
         </div>
       )}
@@ -223,7 +334,7 @@ function ScanResultCard({ result }: { result: ScanResult }) {
   const { score } = result;
 
   return (
-    <div className="mt-8 rounded-2xl border border-border bg-bg-secondary/80 p-6 backdrop-blur-sm">
+    <div className="mt-8 glass-card rounded-2xl p-6">
       <div className="mb-5 border-b border-border pb-4">
         <p className="text-caption text-text-tertiary truncate">{result.url}</p>
         {result.title && (
@@ -280,9 +391,9 @@ function ScanResultCard({ result }: { result: ScanResult }) {
       <div className="mt-6 text-center">
         <Link
           href="/auth/login"
-          className="inline-block rounded-lg bg-brand px-5 py-2.5 text-body-sm font-medium text-white transition-colors hover:bg-brand-hover"
+          className="btn-shimmer inline-block rounded-xl bg-brand px-5 py-2.5 text-body-sm font-medium text-white transition-colors hover:bg-brand-hover"
         >
-          Get Full Report &rarr;
+          Get Full Report
         </Link>
       </div>
     </div>
@@ -299,7 +410,7 @@ function DimensionBar({ label, score, max }: { label: string; score: number; max
           {score}/{max}
         </span>
       </div>
-      <div className="h-2 w-full overflow-hidden rounded-full bg-bg-tertiary">
+      <div className="h-1.5 w-full overflow-hidden rounded-full bg-bg-tertiary">
         <div
           className={`h-full rounded-full transition-all duration-500 ${bgBarColor(score, max)}`}
           style={{ width: `${pct}%` }}
@@ -314,22 +425,25 @@ function DimensionBar({ label, score, max }: { label: string; score: number; max
 // ---------------------------------------------------------------------------
 const painPoints = [
   {
-    icon: <IconEye className="h-5 w-5 text-brand" />,
+    icon: <IconEye className="h-5 w-5" />,
     title: "Invisible to AI",
     description:
       "ChatGPT, Perplexity, and Google AI Overviews cite your competitors, not you. Your content exists but AI cannot extract answers from it.",
+    color: "#6366f1",
   },
   {
-    icon: <IconChart className="h-5 w-5 text-brand" />,
+    icon: <IconChart className="h-5 w-5" />,
     title: "Losing Organic Traffic",
     description:
       "AI answer engines serve zero-click results. Users never reach your site. Your SEO playbook was built for a world that no longer exists.",
+    color: "#06b6d4",
   },
   {
-    icon: <IconShield className="h-5 w-5 text-brand" />,
+    icon: <IconShield className="h-5 w-5" />,
     title: "No Visibility Into AI Search",
     description:
       "Google Analytics cannot tell you when AI cites your page. You have no idea where you stand in the answer-engine landscape.",
+    color: "#22c55e",
   },
 ];
 
@@ -358,32 +472,42 @@ const features = [
   {
     icon: <IconSearch className="h-5 w-5" />,
     title: "AEO Score Engine",
-    description: "40+ ranking factors across extractability, authority, and freshness. Deterministic, transparent scoring.",
-    span: "lg:col-span-2",
+    description:
+      "40+ ranking factors across extractability, authority, and freshness. Deterministic, transparent scoring you can act on today.",
+    accent: "#6366f1",
+    large: true,
   },
   {
     icon: <IconCode className="h-5 w-5" />,
     title: "Code-Level Fixes",
-    description: "Every issue includes a copy-paste fix. Schema markup, structured data, and content restructuring.",
-    span: "",
+    description:
+      "Every issue includes a copy-paste fix. Schema markup, structured data, and content restructuring.",
+    accent: "#06b6d4",
+    large: false,
   },
   {
     icon: <IconBolt className="h-5 w-5" />,
     title: "Real-Time Monitoring",
-    description: "Daily rescans with trend tracking. Know instantly when your score changes.",
-    span: "",
+    description:
+      "Daily rescans with trend tracking. Know instantly when your score changes.",
+    accent: "#f59e0b",
+    large: false,
   },
   {
     icon: <IconUsers className="h-5 w-5" />,
     title: "Competitor Intelligence",
-    description: "See how your AEO score compares to competitors. Find gaps they exploit that you don't.",
-    span: "",
+    description:
+      "See how your AEO score compares to competitors. Find gaps they exploit that you don't.",
+    accent: "#22c55e",
+    large: true,
   },
   {
     icon: <IconChart className="h-5 w-5" />,
     title: "Citation Tracking",
-    description: "Monitor when ChatGPT, Perplexity, or Google AI Overviews cite your content.",
-    span: "",
+    description:
+      "Monitor when ChatGPT, Perplexity, or Google AI Overviews cite your content. Know exactly which queries surface your pages.",
+    accent: "#ef4444",
+    large: false,
   },
 ];
 
@@ -450,84 +574,120 @@ const stats = [
 // Landing Page
 // ---------------------------------------------------------------------------
 export default function Home() {
+  useScrollReveal();
+
   return (
-    <main>
+    <main className="relative">
       {/* ================================================================= */}
-      {/* HERO — centered, glow background, dual CTA */}
+      {/* NAV */}
       {/* ================================================================= */}
-      <section className="relative overflow-hidden hero-glow">
-        <div className="mx-auto max-w-7xl px-6 pt-24 pb-20 text-center lg:pt-32">
-          {/* Announcement badge */}
-          <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-border bg-bg-secondary px-4 py-1.5">
+      <nav className="glass fixed top-0 left-0 right-0 z-50">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+          <Link href="/" className="text-h4 font-bold text-text-primary tracking-tight">
+            Cited<span className="text-gradient-brand">AI</span>
+          </Link>
+          <div className="hidden items-center gap-8 md:flex">
+            <Link href="#features" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">Features</Link>
+            <Link href="#how-it-works" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">How it works</Link>
+            <Link href="#pricing" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">Pricing</Link>
+          </div>
+          <div className="flex items-center gap-3">
+            <Link href="/auth/login" className="text-body-sm text-text-secondary transition-colors hover:text-text-primary">
+              Log in
+            </Link>
+            <Link
+              href="/auth/login"
+              className="btn-shimmer rounded-lg bg-brand px-4 py-2 text-body-sm font-medium text-white transition-all hover:bg-brand-hover"
+            >
+              Get Started
+            </Link>
+          </div>
+        </div>
+      </nav>
+
+      {/* ================================================================= */}
+      {/* HERO */}
+      {/* ================================================================= */}
+      <section className="relative overflow-hidden hero-glow dot-grid">
+        {/* Noise texture overlay */}
+        <div className="noise pointer-events-none absolute inset-0" />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-6 pt-36 pb-24 text-center lg:pt-44">
+          {/* Pill badge */}
+          <div className="reveal mb-8 inline-flex items-center gap-2.5 rounded-full glass px-4 py-2">
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
             <span className="text-caption text-text-secondary">Now in public beta</span>
+            <IconArrowRight className="h-3 w-3 text-text-tertiary" />
           </div>
 
-          {/* Headline — under 8 words (research optimal) */}
-          <h1 className="text-display font-bold text-text-primary mx-auto max-w-4xl text-balance">
+          {/* Headline */}
+          <h1 className="reveal text-display text-text-primary mx-auto max-w-4xl text-balance">
             Get cited by{" "}
             <span className="text-gradient">AI answer engines</span>
           </h1>
 
           {/* Subtext */}
-          <p className="mt-6 text-body-lg text-text-secondary mx-auto max-w-2xl text-pretty">
+          <p className="reveal mt-6 text-body-lg text-text-secondary mx-auto max-w-2xl text-pretty">
             Score any page for AI-citability. Get actionable fixes to appear in ChatGPT,
             Perplexity, and Google AI Overviews.
           </p>
 
-          {/* Scanner CTA */}
-          <div className="mt-12">
+          {/* Scanner */}
+          <div className="reveal mt-14">
             <FreeScanner />
           </div>
 
-          <p className="mt-4 text-caption text-text-tertiary">
+          <p className="reveal mt-5 text-caption text-text-tertiary">
             No sign-up required. Scan any public URL instantly.
           </p>
-        </div>
-      </section>
 
-      {/* ================================================================= */}
-      {/* STATS BAR — big numbers (Stripe pattern) */}
-      {/* ================================================================= */}
-      <section className="border-y border-border">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-2 gap-8 py-12 md:grid-cols-4">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <p className="text-h1 font-bold text-text-primary tabular-nums">{stat.value}</p>
-                <p className="mt-1 text-body-sm text-text-tertiary">{stat.label}</p>
-              </div>
-            ))}
+          {/* Floating stats */}
+          <div className="reveal mt-20 stagger">
+            <div className="mx-auto grid max-w-3xl grid-cols-2 gap-4 md:grid-cols-4">
+              {stats.map((stat) => (
+                <div key={stat.label} className="glass-card rounded-xl px-5 py-4 text-center">
+                  <p className="text-h3 font-bold text-text-primary tabular-nums">{stat.value}</p>
+                  <p className="mt-1 text-tiny text-text-tertiary">{stat.label}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* ================================================================= */}
-      {/* PROBLEM — pain points grid */}
+      {/* PROBLEM — pain points */}
       {/* ================================================================= */}
-      <section className="py-32">
+      <section className="relative py-32 overflow-hidden">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mx-auto max-w-2xl text-center mb-16">
-            <h2 className="text-h2 font-semibold text-text-primary">
-              SEO got you to page one. AI search rewrites the rules.
+          <div className="reveal mx-auto max-w-2xl text-center mb-16">
+            <p className="text-overline text-brand mb-4">The Problem</p>
+            <h2 className="text-h2 text-text-primary">
+              SEO got you to page one.{" "}
+              <span className="text-text-tertiary">AI search rewrites the rules.</span>
             </h2>
-            <p className="mt-4 text-body-lg text-text-secondary">
+            <p className="mt-5 text-body-lg text-text-secondary">
               Answer engines generate responses, not links. If your content is not
               structured for extraction, AI will cite someone else.
             </p>
           </div>
 
-          <div className="grid gap-4 md:grid-cols-3">
+          <div className="stagger grid gap-5 md:grid-cols-3">
             {painPoints.map((point) => (
               <div
                 key={point.title}
-                className="group rounded-2xl border border-border bg-bg-secondary p-8 transition-all hover:border-border-hover card-glow"
+                className="glass-card card-lift group rounded-2xl p-8"
               >
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle">
-                  {point.icon}
+                <div
+                  className="mb-5 flex h-11 w-11 items-center justify-center rounded-xl"
+                  style={{ backgroundColor: `${point.color}12` }}
+                >
+                  <span style={{ color: point.color }}>{point.icon}</span>
                 </div>
-                <h3 className="text-h4 font-semibold text-text-primary">{point.title}</h3>
-                <p className="mt-2 text-body-sm text-text-secondary leading-relaxed">{point.description}</p>
+                <h3 className="text-h4 text-text-primary">{point.title}</h3>
+                <p className="mt-3 text-body-sm text-text-secondary leading-relaxed">
+                  {point.description}
+                </p>
               </div>
             ))}
           </div>
@@ -535,56 +695,83 @@ export default function Home() {
       </section>
 
       {/* ================================================================= */}
-      {/* FEATURES — Bento grid (Vercel/Linear pattern) */}
+      {/* FEATURES — Asymmetric bento grid with spotlight cards */}
       {/* ================================================================= */}
-      <section className="py-32 border-t border-border">
+      <section id="features" className="py-32 border-t border-border relative">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="mx-auto max-w-2xl text-center mb-16">
-            <h2 className="text-h2 font-semibold text-text-primary">
-              Built for AEO professionals
+          <div className="reveal mx-auto max-w-2xl text-center mb-16">
+            <p className="text-overline text-brand mb-4">Features</p>
+            <h2 className="text-h2 text-text-primary">
+              Built for{" "}
+              <span className="text-gradient-brand">AEO professionals</span>
             </h2>
-            <p className="mt-4 text-body-lg text-text-secondary">
+            <p className="mt-5 text-body-lg text-text-secondary">
               Every feature designed around real citation workflows.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {features.map((feat) => (
-              <div
+          {/* Asymmetric bento: row 1 = 2 large, row 2 = 3 small */}
+          <div className="reveal grid gap-4 md:grid-cols-2">
+            {features.filter((f) => f.large).map((feat) => (
+              <SpotlightFeatureCard
                 key={feat.title}
-                className={`group rounded-2xl border border-border bg-bg-secondary p-8 transition-all hover:border-border-hover card-glow ${feat.span}`}
-              >
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-xl bg-brand-subtle text-brand">
-                  {feat.icon}
-                </div>
-                <h3 className="text-h4 font-semibold text-text-primary">{feat.title}</h3>
-                <p className="mt-2 text-body-sm text-text-secondary">{feat.description}</p>
-              </div>
+                icon={feat.icon}
+                title={feat.title}
+                description={feat.description}
+                accentColor={feat.accent}
+                className="min-h-[220px]"
+              />
+            ))}
+          </div>
+          <div className="reveal mt-4 grid gap-4 md:grid-cols-3">
+            {features.filter((f) => !f.large).map((feat) => (
+              <SpotlightFeatureCard
+                key={feat.title}
+                icon={feat.icon}
+                title={feat.title}
+                description={feat.description}
+                accentColor={feat.accent}
+              />
             ))}
           </div>
         </div>
       </section>
 
       {/* ================================================================= */}
-      {/* HOW IT WORKS — 3-step numbered */}
+      {/* HOW IT WORKS — connected steps with gradient line */}
       {/* ================================================================= */}
-      <section className="py-32 bg-bg-secondary border-y border-border">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mx-auto max-w-2xl text-center mb-16">
-            <h2 className="text-h2 font-semibold text-text-primary">How it works</h2>
-            <p className="mt-4 text-body-lg text-text-secondary">
-              Three steps to get your content cited by AI answer engines.
+      <section id="how-it-works" className="py-32 bg-bg-secondary border-y border-border relative noise">
+        <div className="relative z-10 mx-auto max-w-7xl px-6">
+          <div className="reveal mx-auto max-w-2xl text-center mb-20">
+            <p className="text-overline text-brand mb-4">How It Works</p>
+            <h2 className="text-h2 text-text-primary">Three steps to AI citations</h2>
+            <p className="mt-5 text-body-lg text-text-secondary">
+              From scan to citation in minutes, not months.
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
+          <div className="stagger relative grid gap-12 md:grid-cols-3 md:gap-8">
+            {/* Gradient connecting line (desktop only) */}
+            <div
+              className="pointer-events-none absolute top-[44px] left-[16.67%] right-[16.67%] hidden h-px md:block"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent 0%, var(--color-brand) 30%, var(--color-accent) 70%, transparent 100%)",
+              }}
+            />
+
             {steps.map((s) => (
-              <div key={s.step} className="text-center">
-                <div className="mx-auto mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-brand text-h3 font-bold text-white shadow-lg shadow-brand/20">
-                  {s.step}
+              <div key={s.step} className="relative text-center">
+                {/* Step number with glow border */}
+                <div className="glow-border mx-auto mb-8 flex h-[72px] w-[72px] items-center justify-center rounded-2xl">
+                  <span className="text-h2 font-bold text-text-primary relative z-10">
+                    {s.step}
+                  </span>
                 </div>
-                <h3 className="text-h3 font-semibold text-text-primary">{s.title}</h3>
-                <p className="mt-3 text-body-sm text-text-secondary mx-auto max-w-xs">{s.description}</p>
+                <h3 className="text-h3 text-text-primary">{s.title}</h3>
+                <p className="mt-3 text-body-sm text-text-secondary mx-auto max-w-xs leading-relaxed">
+                  {s.description}
+                </p>
               </div>
             ))}
           </div>
@@ -592,60 +779,65 @@ export default function Home() {
       </section>
 
       {/* ================================================================= */}
-      {/* PRICING — 3-col with highlighted plan */}
+      {/* PRICING */}
       {/* ================================================================= */}
       <section id="pricing" className="py-32">
         <div className="mx-auto max-w-7xl px-6 text-center">
-          <h2 className="text-h2 font-semibold text-text-primary">
-            Simple, transparent pricing
-          </h2>
-          <p className="mt-4 text-body-lg text-text-secondary">
-            Start free for 14 days. No credit card required.
-          </p>
+          <div className="reveal">
+            <p className="text-overline text-brand mb-4">Pricing</p>
+            <h2 className="text-h2 text-text-primary">
+              Simple, transparent pricing
+            </h2>
+            <p className="mt-5 text-body-lg text-text-secondary">
+              Start free for 14 days. No credit card required.
+            </p>
+          </div>
 
-          <div className="mt-16 grid gap-6 text-left md:grid-cols-3">
+          <div className="stagger mt-16 grid gap-5 text-left md:grid-cols-3">
             {plans.map((plan) => (
               <div
                 key={plan.name}
                 className={`relative rounded-2xl p-8 transition-all ${
                   plan.highlighted
-                    ? "border-2 border-brand bg-bg-secondary shadow-glow"
-                    : "border border-border bg-bg-secondary hover:border-border-hover"
+                    ? "glow-border"
+                    : "glass-card"
                 }`}
               >
                 {plan.highlighted && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-brand px-3 py-1 text-tiny font-medium text-white">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 rounded-full bg-brand px-4 py-1 text-tiny font-medium text-white">
                     Most Popular
                   </div>
                 )}
 
-                <h3 className="text-h5 font-semibold text-text-primary">{plan.name}</h3>
-                <p className="mt-2 text-caption text-text-tertiary">{plan.description}</p>
+                <div className="relative z-10">
+                  <h3 className="text-h4 text-text-primary">{plan.name}</h3>
+                  <p className="mt-2 text-caption text-text-tertiary">{plan.description}</p>
 
-                <p className="mt-6">
-                  <span className="text-h1 font-bold text-text-primary tabular-nums">${plan.price}</span>
-                  <span className="text-body-sm text-text-tertiary">/month</span>
-                </p>
+                  <p className="mt-6">
+                    <span className="text-h1 font-bold text-text-primary tabular-nums">${plan.price}</span>
+                    <span className="text-body-sm text-text-tertiary">/month</span>
+                  </p>
 
-                <Link
-                  href="/auth/login"
-                  className={`mt-8 block w-full rounded-lg py-3 text-center text-body-sm font-medium transition-colors ${
-                    plan.highlighted
-                      ? "bg-brand text-white hover:bg-brand-hover"
-                      : "border border-border text-text-primary hover:bg-bg-tertiary"
-                  }`}
-                >
-                  {plan.cta}
-                </Link>
+                  <Link
+                    href="/auth/login"
+                    className={`mt-8 block w-full rounded-xl py-3.5 text-center text-body-sm font-medium transition-all ${
+                      plan.highlighted
+                        ? "btn-shimmer bg-brand text-white hover:bg-brand-hover"
+                        : "border border-border text-text-primary hover:bg-bg-tertiary hover:border-border-hover"
+                    }`}
+                  >
+                    {plan.cta}
+                  </Link>
 
-                <ul className="mt-8 space-y-3">
-                  {plan.features.map((feat) => (
-                    <li key={feat} className="flex items-center gap-3 text-body-sm text-text-secondary">
-                      <IconCheck className="h-4 w-4 shrink-0 text-success" />
-                      {feat}
-                    </li>
-                  ))}
-                </ul>
+                  <ul className="mt-8 space-y-3">
+                    {plan.features.map((feat) => (
+                      <li key={feat} className="flex items-center gap-3 text-body-sm text-text-secondary">
+                        <IconCheck className="h-4 w-4 shrink-0 text-brand" />
+                        {feat}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               </div>
             ))}
           </div>
@@ -653,30 +845,62 @@ export default function Home() {
       </section>
 
       {/* ================================================================= */}
-      {/* FINAL CTA — contained card with mesh gradient */}
+      {/* FINAL CTA */}
       {/* ================================================================= */}
       <section className="py-32">
         <div className="mx-auto max-w-7xl px-6">
-          <div className="rounded-3xl border border-border p-16 text-center relative overflow-hidden mesh-gradient">
-            <h2 className="text-h1 font-bold text-text-primary relative z-10">
-              Stop guessing. Start getting cited.
-            </h2>
-            <p className="mt-4 text-body-lg text-text-secondary relative z-10 mx-auto max-w-xl">
-              Join the beta and discover exactly where your content stands in the
-              AI answer-engine landscape.
-            </p>
-            <Link
-              href="/auth/login"
-              className="mt-8 inline-block rounded-lg bg-brand px-8 py-4 text-body font-medium text-white shadow-lg shadow-brand/20 hover:bg-brand-hover transition-all relative z-10"
-            >
-              Start Your 14-Day Free Trial
-            </Link>
-            <p className="mt-4 text-caption text-text-tertiary relative z-10">
-              No credit card required. Cancel anytime.
-            </p>
+          <div className="reveal relative overflow-hidden rounded-3xl border border-border p-16 text-center mesh-gradient noise">
+            <div className="relative z-10">
+              <h2 className="text-h1 font-bold text-text-primary">
+                Stop guessing.{" "}
+                <span className="text-gradient">Start getting cited.</span>
+              </h2>
+              <p className="mt-5 text-body-lg text-text-secondary mx-auto max-w-xl">
+                Join the beta and discover exactly where your content stands in the
+                AI answer-engine landscape.
+              </p>
+              <Link
+                href="/auth/login"
+                className="btn-shimmer mt-10 inline-flex items-center gap-2 rounded-xl bg-brand px-8 py-4 text-body font-medium text-white shadow-glow transition-all hover:bg-brand-hover"
+              >
+                Start Your 14-Day Free Trial
+                <IconArrowRight className="h-4 w-4" />
+              </Link>
+              <p className="mt-5 text-caption text-text-tertiary">
+                No credit card required. Cancel anytime.
+              </p>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* ================================================================= */}
+      {/* FOOTER */}
+      {/* ================================================================= */}
+      <footer className="glass border-t border-border">
+        <div className="mx-auto max-w-7xl px-6 py-12">
+          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
+            <div>
+              <Link href="/" className="text-h4 font-bold text-text-primary tracking-tight">
+                Cited<span className="text-gradient-brand">AI</span>
+              </Link>
+              <p className="mt-2 text-caption text-text-tertiary">
+                Make your content visible to AI answer engines.
+              </p>
+            </div>
+            <div className="flex items-center gap-8">
+              <Link href="#features" className="text-body-sm text-text-tertiary transition-colors hover:text-text-secondary">Features</Link>
+              <Link href="#pricing" className="text-body-sm text-text-tertiary transition-colors hover:text-text-secondary">Pricing</Link>
+              <Link href="/auth/login" className="text-body-sm text-text-tertiary transition-colors hover:text-text-secondary">Log in</Link>
+            </div>
+          </div>
+          <div className="mt-10 border-t border-border pt-6 text-center">
+            <p className="text-tiny text-text-disabled">
+              CitedAI. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
