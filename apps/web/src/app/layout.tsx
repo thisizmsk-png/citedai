@@ -19,8 +19,8 @@ function Logo() {
       <circle cx="14.5" cy="14.5" r="3" fill="#fff" />
       <defs>
         <linearGradient id="logo-gradient" x1="0" y1="0" x2="28" y2="28" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#3186FF" />
-          <stop offset="1" stopColor="#06b6d4" />
+          <stop stopColor="#0a0a0c" />
+          <stop offset="1" stopColor="#2a2a2e" />
         </linearGradient>
       </defs>
     </svg>
@@ -152,7 +152,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en">
       <body className="min-h-screen bg-bg-primary text-text-primary antialiased font-sans">
         <Header />
         <div className="pt-16">{/* offset for fixed header */}

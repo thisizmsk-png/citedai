@@ -1,56 +1,58 @@
 @import "tailwindcss";
 
 /* ============================================================
-   CitedAI — Clean Design System
-   Post-critique rebuild: zero AI slop, zero glassmorphism,
-   zero gradient text, zero shimmer, zero spotlight effects.
-   References: Botronics (restraint), Resend (developer trust),
-   Stripe (readable complexity), Vercel (whitespace confidence)
+   CitedAI — Light Theme (Botronics-inspired)
+   White background, black text, minimal blue accent.
+   The opposite of AI slop.
    ============================================================ */
 
 @theme {
   --font-sans: "Satoshi", "General Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
 
-  /* Surfaces */
-  --color-bg-primary: #0a0a0c;
-  --color-bg-secondary: #111114;
-  --color-bg-tertiary: #1a1a1f;
-  --color-bg-hover: #222228;
-  --color-bg-active: #2a2a32;
+  /* Surfaces — white, with subtle warm grays */
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f8f8f9;
+  --color-bg-tertiary: #f0f0f2;
+  --color-bg-hover: #eaeaed;
+  --color-bg-active: #e0e0e5;
 
-  /* Text */
-  --color-text-primary: #ededf0;
-  --color-text-secondary: #8e8e9a;
-  --color-text-tertiary: #5a5a6a;
-  --color-text-disabled: #3a3a46;
-  --color-text-inverse: #0a0a0c;
+  /* Text — black with opacity hierarchy */
+  --color-text-primary: #0a0a0c;
+  --color-text-secondary: rgba(10, 10, 12, 0.65);
+  --color-text-tertiary: rgba(10, 10, 12, 0.35);
+  --color-text-disabled: rgba(10, 10, 12, 0.2);
+  --color-text-inverse: #ffffff;
 
-  /* Borders — 1px, barely visible (Botronics pattern) */
-  --color-border: rgba(255, 255, 255, 0.07);
-  --color-border-hover: rgba(255, 255, 255, 0.14);
-  --color-border-active: rgba(255, 255, 255, 0.2);
-  --color-border-accent: #3186FF;
+  /* Borders — 1px, barely visible (Botronics: rgba(0,0,0,0.1)) */
+  --color-border: rgba(0, 0, 0, 0.08);
+  --color-border-hover: rgba(0, 0, 0, 0.15);
+  --color-border-active: rgba(0, 0, 0, 0.25);
+  --color-border-accent: #0a0a0c;
 
-  /* Brand — single blue, used sparingly (Raycast: one accent on dark) */
-  --color-brand: #3186FF;
-  --color-brand-hover: #4EA0FF;
-  --color-brand-active: #2070E0;
-  --color-brand-subtle: rgba(49, 134, 255, 0.06);
-  --color-brand-muted: rgba(49, 134, 255, 0.10);
+  /* Brand — black is the brand. Blue used sparingly for interactive elements only */
+  --color-brand: #0a0a0c;
+  --color-brand-hover: #2a2a2e;
+  --color-brand-active: #000000;
+  --color-brand-subtle: rgba(10, 10, 12, 0.04);
+  --color-brand-muted: rgba(10, 10, 12, 0.08);
+
+  /* Accent — blue, used ONLY for links and interactive highlights */
+  --color-accent: #3186FF;
+  --color-accent-hover: #4EA0FF;
 
   /* Status */
-  --color-success: #22c55e;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3186FF;
+  --color-success: #16a34a;
+  --color-warning: #d97706;
+  --color-error: #dc2626;
+  --color-info: #2563eb;
 
-  /* Shadows — minimal, no glows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.3);
-  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.4);
+  /* Shadows — light, subtle */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.08);
 
-  /* Animations — only fade-up for scroll reveal */
+  /* Animations */
   --animate-fade-up: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
@@ -74,11 +76,11 @@ body {
 }
 
 ::selection {
-  background: rgba(49, 134, 255, 0.25);
+  background: rgba(10, 10, 12, 0.12);
 }
 
 /* ============================================================
-   Typography — Botronics: 1.0 line-height, -0.04em headings
+   Typography — Botronics: weight 500, line-height 1.0, -0.04em
    ============================================================ */
 
 @utility text-display {
@@ -160,12 +162,12 @@ body {
 }
 
 /* ============================================================
-   Components — flat, sharp, no effects
+   Components — flat, sharp, no effects (Botronics restraint)
    ============================================================ */
 
-/* Card — flat bg, 1px border, sharp corners */
+/* Card — white bg, 1px border, sharp corners */
 .card {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-primary);
   border: 1px solid var(--color-border);
   border-radius: 0;
   transition: border-color 0.15s ease;
@@ -174,9 +176,9 @@ body {
   border-color: var(--color-border-hover);
 }
 
-/* Same class for backwards compat */
+/* Backwards compat */
 .glass-card {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-primary);
   border: 1px solid var(--color-border);
   border-radius: 0;
   transition: border-color 0.15s ease;
@@ -185,9 +187,9 @@ body {
   border-color: var(--color-border-hover);
 }
 
-/* Glass header — only place blur is allowed (nav needs transparency) */
+/* Nav — white with bottom border (Botronics: transparent nav, but we need contrast) */
 .glass {
-  background: rgba(10, 10, 12, 0.85);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--color-border);
@@ -202,14 +204,14 @@ body {
   color: var(--color-text-tertiary);
 }
 
-/* Divider (Botronics: full-width 1px line) */
+/* Divider */
 .divider {
   width: 100%;
   height: 1px;
   background: var(--color-border);
 }
 
-/* Button — sharp, uppercase (Botronics pattern) */
+/* Button — black fill, sharp corners, uppercase (Botronics exact pattern) */
 .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -221,7 +223,7 @@ body {
   letter-spacing: 0.03em;
   text-transform: uppercase;
   background: var(--color-brand);
-  color: white;
+  color: var(--color-text-inverse);
   border: none;
   border-radius: 0;
   transition: background 0.15s ease;
@@ -231,6 +233,7 @@ body {
   background: var(--color-brand-hover);
 }
 
+/* Outline button (Botronics: black border, invert on hover) */
 .btn-outline {
   display: inline-flex;
   align-items: center;
@@ -253,7 +256,7 @@ body {
   color: var(--color-bg-primary);
 }
 
-/* Scroll reveal — simple fade up, no fancy easing */
+/* Scroll reveal */
 .reveal {
   opacity: 0;
   transform: translateY(16px);
@@ -264,7 +267,7 @@ body {
   transform: translateY(0);
 }
 
-/* Stagger children */
+/* Stagger */
 .stagger > * { opacity: 0; transform: translateY(12px); transition: opacity 0.4s ease, transform 0.4s ease; }
 .stagger.visible > *:nth-child(1) { transition-delay: 0ms; opacity: 1; transform: translateY(0); }
 .stagger.visible > *:nth-child(2) { transition-delay: 60ms; opacity: 1; transform: translateY(0); }
@@ -272,20 +275,4 @@ body {
 .stagger.visible > *:nth-child(4) { transition-delay: 180ms; opacity: 1; transform: translateY(0); }
 .stagger.visible > *:nth-child(5) { transition-delay: 240ms; opacity: 1; transform: translateY(0); }
 
-/* Tabular nums for data */
 .tabular-nums { font-variant-numeric: tabular-nums; }
-
-/* ============================================================
-   REMOVED (AI slop):
-   - .text-gradient, .text-gradient-brand (gradient text)
-   - .hero-glow (radial gradient hero background)
-   - .dot-grid (dot pattern background)
-   - .mesh-gradient (multi-point gradient)
-   - .spotlight-card (mouse-follow glow)
-   - .btn-shimmer (shimmer sweep animation)
-   - .glow-border (spinning conic gradient border)
-   - .card-lift (hover translateY + shadow)
-   - .noise (SVG turbulence texture)
-   - pulse-glow, shimmer, border-spin, float, gradient-shift keyframes
-   - shadow-glow, shadow-glow-lg
-   ============================================================ */
