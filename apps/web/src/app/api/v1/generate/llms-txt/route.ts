@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
+import { validateExternalUrl } from "@/lib/ssrf-guard";
 
 // ---------------------------------------------------------------------------
 // Rate limiting (in-memory for MVP)
@@ -54,10 +55,15 @@ interface DiscoveredPage {
 }
 
 // ---------------------------------------------------------------------------
-// Safe fetch helper (simplified for generation — no SSRF concern on output)
+// Safe fetch helper with SSRF protection (C2 fix)
 // ---------------------------------------------------------------------------
 async function safeFetchText(url: string, timeoutMs: number): Promise<string | null> {
   try {
+    // SSRF check — block internal/private URLs
+    const parsedUrl = new URL(url);
+    const isExternal = await validateExternalUrl(parsedUrl);
+    if (!isExternal) return null;
+
     const response = await fetch(url, {
       headers: {
         "User-Agent": "CitedAI-Generator/1.0 (+https://citedai.com/bot)",

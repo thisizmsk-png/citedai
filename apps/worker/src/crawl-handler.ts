@@ -295,6 +295,8 @@ async function discoverFromHomepage(
 // Page fetcher
 // ---------------------------------------------------------------------------
 
+const MAX_PAGE_SIZE = 10 * 1024 * 1024; // 10MB — H4 fix
+
 async function fetchPage(url: string): Promise<string> {
   const response = await fetch(url, {
     headers: { "User-Agent": CRAWL_SETTINGS.USER_AGENT },
@@ -305,7 +307,26 @@ async function fetchPage(url: string): Promise<string> {
     throw new Error(`HTTP ${response.status} for ${url}`);
   }
 
-  return response.text();
+  // Stream with size limit to prevent OOM
+  const reader = response.body?.getReader();
+  if (!reader) throw new Error(`No response body for ${url}`);
+  const chunks: Uint8Array[] = [];
+  let totalBytes = 0;
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      totalBytes += value.byteLength;
+      if (totalBytes > MAX_PAGE_SIZE) {
+        reader.cancel();
+        throw new Error(`Response too large (>${MAX_PAGE_SIZE} bytes) for ${url}`);
+      }
+      chunks.push(value);
+    }
+  } finally {
+    reader.releaseLock();
+  }
+  return new TextDecoder().decode(Buffer.concat(chunks));
 }
 
 // ---------------------------------------------------------------------------

@@ -28,7 +28,7 @@ export default function LoginPage() {
           password,
         });
         if (signInError) {
-          setError(signInError.message);
+          setError("Invalid email or password."); // M3: generic to prevent user enumeration
           return;
         }
       } else {
@@ -40,7 +40,9 @@ export default function LoginPage() {
           },
         });
         if (signUpError) {
-          setError(signUpError.message);
+          // M3: only show safe errors, generic for everything else
+          const safe = ["Password should be at least 6 characters", "already registered"];
+          setError(safe.some(s => signUpError.message.includes(s)) ? signUpError.message : "Could not create account. Please try again.");
           return;
         }
       }

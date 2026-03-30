@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as cheerio from "cheerio";
+import { validateExternalUrl } from "@/lib/ssrf-guard";
 
 // ---------------------------------------------------------------------------
 // Rate limiting (in-memory for MVP)
@@ -69,6 +70,11 @@ interface PageMeta {
 // ---------------------------------------------------------------------------
 async function fetchPageMeta(url: string): Promise<PageMeta | null> {
   try {
+    // SSRF check — block internal/private URLs (C2 fix)
+    const fetchUrl = new URL(url);
+    const isExternal = await validateExternalUrl(fetchUrl);
+    if (!isExternal) return null;
+
     const response = await fetch(url, {
       headers: {
         "User-Agent": "CitedAI-Generator/1.0 (+https://citedai.com/bot)",
