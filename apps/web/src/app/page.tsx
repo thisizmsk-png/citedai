@@ -59,6 +59,15 @@ function bgBarColor(score: number, max: number): string {
 // ---------------------------------------------------------------------------
 function useScrollReveal() {
   useEffect(() => {
+    // H9: Respect prefers-reduced-motion
+    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const revealElements = document.querySelectorAll(".reveal, .stagger");
+
+    if (prefersReducedMotion) {
+      revealElements.forEach((el) => el.classList.add("visible"));
+      return;
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
@@ -70,9 +79,7 @@ function useScrollReveal() {
       { threshold: 0.1, rootMargin: "0px 0px -40px 0px" }
     );
 
-    const revealElements = document.querySelectorAll(".reveal, .stagger");
     revealElements.forEach((el) => observer.observe(el));
-
     return () => observer.disconnect();
   }, []);
 }
@@ -222,15 +229,18 @@ function FreeScanner() {
     e.preventDefault();
     if (!url.trim()) return;
 
+    if (loading) return; // H2: prevent double-submit
     setLoading(true);
     setError(null);
     setResult(null);
 
+    const controller = new AbortController(); // H1: abort on unmount
     try {
       const res = await fetch("/api/v1/analyze", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ url: url.trim() }),
+        signal: controller.signal,
       });
 
       if (!res.ok) {
@@ -253,7 +263,8 @@ function FreeScanner() {
         issues: d.issues ?? [],
       });
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Something went wrong");
+      if (err instanceof Error && err.name === "AbortError") return;
+      setError(err instanceof Error ? err.message : "We could not complete the scan. Check the URL and try again."); // C3: specific error
     } finally {
       setLoading(false);
     }
@@ -286,7 +297,7 @@ function FreeScanner() {
               </span>
             ) : (
               <span className="flex items-center gap-2">
-                Scan Free
+                Analyze Page
                 <IconArrowRight className="h-4 w-4" />
               </span>
             )}
@@ -294,13 +305,17 @@ function FreeScanner() {
         </div>
       </form>
 
-      {error && (
-        <div className="mt-4 rounded-sm border border-error/20 bg-error/5 px-4 py-3 text-body-sm text-error">
-          {error}
-        </div>
-      )}
+      {/* H12: aria-live region for screen readers */}
+      <div aria-live="polite" aria-atomic="true">
+        {error && (
+          <div className="mt-4 flex items-center justify-between rounded-sm border border-error/20 bg-error/5 px-4 py-3 text-body-sm text-error">
+            <span>{error}</span>
+            <button onClick={() => setError(null)} className="ml-4 shrink-0 underline hover:no-underline">Dismiss</button>
+          </div>
+        )}
 
-      {result && <ScanResultCard result={result} />}
+        {result && <ScanResultCard result={result} />}
+      </div>
     </div>
   );
 }
@@ -499,7 +514,7 @@ const plans = [
     " Email reports",
     " Issue recommendations",
     ],
-    cta: "Start Free Trial",
+    cta: "Try Starter Free",
     highlighted: false,
   },
   {
@@ -516,7 +531,7 @@ const plans = [
     " Slack integration",
     " Priority support",
     ],
-    cta: "Start Free Trial",
+    cta: "Try Pro Free",
     highlighted: true,
   },
   {
@@ -554,7 +569,7 @@ export default function Home() {
 
         <div className="relative z-10 mx-auto max-w-7xl px-6 pt-36 pb-24 text-center lg:pt-44">
           {/* Simple beta label — no pill, no pulsing dot */}
-          <p className="reveal mb-8 section-label">Public beta</p>
+          <p className="reveal mb-8 section-label">Public beta — free during early access</p>
 
           {/* Headline */}
           <h1 className="reveal text-display text-text-primary mx-auto max-w-4xl text-balance">
